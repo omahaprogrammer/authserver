@@ -33,7 +33,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -97,6 +96,10 @@ public class Profile implements Serializable {
     @Lob
     @Column(name = "salt", nullable = false)
     private byte[] salt;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "rounds", nullable = false)
+    private Integer rounds;
     @Column(name = "family_name")
     private String familyName;
     @Column(name = "given_name")
@@ -159,12 +162,13 @@ public class Profile implements Serializable {
         this.id = id;
     }
 
-    public Profile(Integer id, String sub, String preferredUsername, byte[] passwordBytes, byte[] salt, boolean emailVerified, boolean phoneNumberVerified) {
+    public Profile(Integer id, String sub, String preferredUsername, byte[] passwordBytes, byte[] salt, Integer rounds, boolean emailVerified, boolean phoneNumberVerified) {
         this.id = id;
         this.sub = sub;
         this.preferredUsername = preferredUsername;
         this.passwordBytes = passwordBytes;
         this.salt = salt;
+        this.rounds = rounds;
         this.emailVerified = emailVerified;
         this.phoneNumberVerified = phoneNumberVerified;
     }
@@ -207,6 +211,14 @@ public class Profile implements Serializable {
 
     public void setSalt(byte[] salt) {
         this.salt = salt;
+    }
+
+    public Integer getRounds() {
+        return rounds;
+    }
+
+    public void setRounds(Integer rounds) {
+        this.rounds = rounds;
     }
 
     public String getFamilyName() {

@@ -26,6 +26,7 @@ CREATE TABLE public.profile
    preferred_username text NOT NULL, 
    password_bytes bytea NOT NULL, 
    salt bytea NOT NULL, 
+   rounds integer NOT NULL,
    family_name text, 
    given_name text, 
    middle_name text, 
