@@ -81,13 +81,11 @@ public class Profile implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 2147483647)
-    @Column(name = "sub", nullable = false, length = 2147483647)
+    @Column(name = "sub", nullable = false)
     private String sub;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 2147483647)
-    @Column(name = "preferred_username", nullable = false, length = 2147483647)
+    @Column(name = "preferred_username", nullable = false)
     private String preferredUsername;
     @Basic(optional = false)
     @NotNull
@@ -99,71 +97,54 @@ public class Profile implements Serializable {
     @Lob
     @Column(name = "salt", nullable = false)
     private byte[] salt;
-    @Size(max = 2147483647)
-    @Column(name = "family_name", length = 2147483647)
+    @Column(name = "family_name")
     private String familyName;
-    @Size(max = 2147483647)
-    @Column(name = "given_name", length = 2147483647)
+    @Column(name = "given_name")
     private String givenName;
-    @Size(max = 2147483647)
-    @Column(name = "middle_name", length = 2147483647)
+    @Column(name = "middle_name")
     private String middleName;
-    @Size(max = 2147483647)
-    @Column(name = "nickname", length = 2147483647)
+    @Column(name = "nickname")
     private String nickname;
-    @Size(max = 2147483647)
-    @Column(name = "profile_name", length = 2147483647)
+    @Column(name = "profile_name")
     private String profileName;
     @Lob
     @Column(name = "picture")
     private byte[] picture;
-    @Size(max = 2147483647)
-    @Column(name = "website", length = 2147483647)
+    @Column(name = "website")
     private String website;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
-    @Size(max = 2147483647)
-    @Column(name = "email", length = 2147483647)
+    @Column(name = "email")
     private String email;
     @Basic(optional = false)
     @NotNull
     @Column(name = "email_verified", nullable = false)
     private boolean emailVerified;
-    @Size(max = 2147483647)
-    @Column(name = "gender", length = 2147483647)
+    @Column(name = "gender")
     private String gender;
     @Column(name = "birthdate")
     @Temporal(TemporalType.DATE)
     private Date birthdate;
-    @Size(max = 2147483647)
-    @Column(name = "zoneinfo", length = 2147483647)
+    @Column(name = "zoneinfo")
     private String zoneinfo;
-    @Size(max = 2147483647)
-    @Column(name = "locale", length = 2147483647)
+    @Column(name = "locale")
     private String locale;
-    @Size(max = 2147483647)
-    @Column(name = "phone_number", length = 2147483647)
+    @Column(name = "phone_number")
     private String phoneNumber;
     @Basic(optional = false)
     @NotNull
     @Column(name = "phone_number_verified", nullable = false)
     private boolean phoneNumberVerified;
-    @Size(max = 2147483647)
-    @Column(name = "address_formatted", length = 2147483647)
+    @Column(name = "address_formatted")
     private String addressFormatted;
-    @Size(max = 2147483647)
-    @Column(name = "address_street_address", length = 2147483647)
+    @Column(name = "address_street_address")
     private String addressStreetAddress;
-    @Size(max = 2147483647)
-    @Column(name = "address_locality", length = 2147483647)
+    @Column(name = "address_locality")
     private String addressLocality;
-    @Size(max = 2147483647)
-    @Column(name = "address_region", length = 2147483647)
+    @Column(name = "address_region")
     private String addressRegion;
-    @Size(max = 2147483647)
-    @Column(name = "address_postal_code", length = 2147483647)
+    @Column(name = "address_postal_code")
     private String addressPostalCode;
-    @Size(max = 2147483647)
-    @Column(name = "address_country", length = 2147483647)
+    @Column(name = "address_country")
     private String addressCountry;
     @Column(name = "updated_at")
     @Temporal(TemporalType.TIMESTAMP)
