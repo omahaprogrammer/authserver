@@ -23,12 +23,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -36,42 +37,41 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Jonathan Paz <jonathan@pazdev.com>
  */
 @Entity
-@Table(name = "client_uri", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"client_id", "client_uri_lang"})})
+@Table(name = "client_logo")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "ClientUri.findAll", query = "SELECT c FROM ClientUri c")
-    , @NamedQuery(name = "ClientUri.findById", query = "SELECT c FROM ClientUri c WHERE c.id = :id")
-    , @NamedQuery(name = "ClientUri.findByClientUri", query = "SELECT c FROM ClientUri c WHERE c.clientUri = :clientUri")
-    , @NamedQuery(name = "ClientUri.findByClientUriLang", query = "SELECT c FROM ClientUri c WHERE c.clientUriLang = :clientUriLang")})
-public class ClientUri implements Serializable {
+    @NamedQuery(name = "ClientLogo.findAll", query = "SELECT c FROM ClientLogo c")
+    , @NamedQuery(name = "ClientLogo.findById", query = "SELECT c FROM ClientLogo c WHERE c.id = :id")
+    , @NamedQuery(name = "ClientLogo.findByLogoLang", query = "SELECT c FROM ClientLogo c WHERE c.logoLang = :logoLang")})
+public class ClientLogo implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "client_uri", nullable = false)
-    private String clientUri;
-    @Column(name = "client_uri_lang")
-    private String clientUriLang;
+    @Lob
+    @Column(name = "logo_image")
+    private byte[] logoImage;
+    @Column(name = "logo_lang")
+    private String logoLang;
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     @ManyToOne
     private Client clientId;
 
-    public ClientUri() {
+    public ClientLogo() {
     }
 
-    public ClientUri(Integer id) {
+    public ClientLogo(Integer id) {
         this.id = id;
     }
 
-    public ClientUri(Integer id, String clientUri) {
+    public ClientLogo(Integer id, byte[] logoImage) {
         this.id = id;
-        this.clientUri = clientUri;
+        this.logoImage = logoImage;
     }
 
     public Integer getId() {
@@ -82,20 +82,20 @@ public class ClientUri implements Serializable {
         this.id = id;
     }
 
-    public String getClientUri() {
-        return clientUri;
+    public byte[] getLogoImage() {
+        return logoImage;
     }
 
-    public void setClientUri(String clientUri) {
-        this.clientUri = clientUri;
+    public void setLogoImage(byte[] logoImage) {
+        this.logoImage = logoImage;
     }
 
-    public String getClientUriLang() {
-        return clientUriLang;
+    public String getLogoLang() {
+        return logoLang;
     }
 
-    public void setClientUriLang(String clientUriLang) {
-        this.clientUriLang = clientUriLang;
+    public void setLogoLang(String logoLang) {
+        this.logoLang = logoLang;
     }
 
     public Client getClientId() {
@@ -116,10 +116,10 @@ public class ClientUri implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ClientUri)) {
+        if (!(object instanceof ClientLogo)) {
             return false;
         }
-        ClientUri other = (ClientUri) object;
+        ClientLogo other = (ClientLogo) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -128,7 +128,7 @@ public class ClientUri implements Serializable {
 
     @Override
     public String toString() {
-        return "com.pazdev.authserver.ClientUri[ id=" + id + " ]";
+        return "com.pazdev.authserver.model.ClientLogo[ id=" + id + " ]";
     }
     
 }

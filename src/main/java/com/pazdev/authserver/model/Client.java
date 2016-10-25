@@ -103,11 +103,16 @@ public class Client implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientId")
     private Set<ClientContact> clientContactSet;
     @OneToMany(mappedBy = "clientId")
-    private Set<ClientPolicy> clientLogoSet;
+    private Set<ClientPolicy> clientPolicySet;
     @OneToMany(mappedBy = "clientId")
     private Set<ClientName> clientNameSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientId")
     private Set<ClientRedirectUri> clientRedirectUriSet;
+    @OneToMany(mappedBy = "clientId")
+    private Set<ClientTerms> clientTermsSet;
+    @OneToMany(mappedBy = "clientId")
+    private Set<ClientLogo> clientLogoSet;
+
 
     public Client() {
     }
@@ -225,12 +230,12 @@ public class Client implements Serializable {
     }
 
     @XmlTransient
-    public Set<ClientPolicy> getClientLogoSet() {
-        return clientLogoSet;
+    public Set<ClientPolicy> getClientPolicySet() {
+        return clientPolicySet;
     }
 
-    public void setClientLogoSet(Set<ClientPolicy> clientLogoSet) {
-        this.clientLogoSet = clientLogoSet;
+    public void setClientPolicySet(Set<ClientPolicy> clientPolicySet) {
+        this.clientPolicySet = clientPolicySet;
     }
 
     @XmlTransient
@@ -274,6 +279,24 @@ public class Client implements Serializable {
     @Override
     public String toString() {
         return "com.pazdev.authserver.Client[ id=" + id + " ]";
+    }
+
+    @XmlTransient
+    public Set<ClientTerms> getClientTermsSet() {
+        return clientTermsSet;
+    }
+
+    public void setClientTermsSet(Set<ClientTerms> clientTermsSet) {
+        this.clientTermsSet = clientTermsSet;
+    }
+
+    @XmlTransient
+    public Set<ClientLogo> getClientLogoSet() {
+        return clientLogoSet;
+    }
+
+    public void setClientLogoSet(Set<ClientLogo> clientLogoSet) {
+        this.clientLogoSet = clientLogoSet;
     }
     
 }

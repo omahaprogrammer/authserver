@@ -29,7 +29,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -55,11 +54,9 @@ public class ClientName implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 2147483647)
-    @Column(name = "client_name", nullable = false, length = 2147483647)
+    @Column(name = "client_name", nullable = false)
     private String clientName;
-    @Size(max = 2147483647)
-    @Column(name = "client_lang", length = 2147483647)
+    @Column(name = "client_lang")
     private String clientLang;
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     @ManyToOne

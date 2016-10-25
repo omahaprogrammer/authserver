@@ -29,7 +29,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -54,8 +53,7 @@ public class ClientRedirectUri implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 2147483647)
-    @Column(name = "redirect_uri", nullable = false, length = 2147483647)
+    @Column(name = "redirect_uri", nullable = false)
     private String redirectUri;
     @JoinColumn(name = "client_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
