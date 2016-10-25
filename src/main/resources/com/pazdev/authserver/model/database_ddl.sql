@@ -73,7 +73,7 @@ create table public.client (
    software_version text
 )
 ;
-drop table if exists public.client_logo cascade;
+drop table if exists public.client_name cascade;
 create table public.client_name (
    id serial primary key,
    client_id integer references public.client(id) on delete cascade,
@@ -82,12 +82,20 @@ create table public.client_name (
    unique (client_id, client_lang)
 );
 drop table if exists public.client_policy cascade;
-create table public.client_logo (
+create table public.client_policy (
    id serial primary key,
    client_id integer references public.client(id) on delete cascade,
    policy_uri text not null,
    policy_uri_lang text,
    unique (client_id, policy_uri_lang)
+);
+drop table if exists public.client_logo cascade;
+create table public.client_logo (
+   id serial primary key,
+   client_id integer references public.client(id) on delete cascade,
+   logo_image bytea not null,
+   logo_lang text,
+   unique (client_id, logo_lang)
 );
 drop table if exists public.client_terms cascade;
 create table public.client_terms (
@@ -97,7 +105,7 @@ create table public.client_terms (
    terms_uri_lang text,
    unique (client_id, terms_uri_lang)
 );
-drop table if exists public.client_terms cascade;
+drop table if exists public.client_uri cascade;
 create table public.client_uri (
    id serial primary key,
    client_id integer references public.client(id) on delete cascade,
@@ -105,7 +113,7 @@ create table public.client_uri (
    client_uri_lang text,
    unique (client_id, client_uri_lang)
 );
-drop table if exists public.client_contact cascade;
+drop table if exists public.client_redirect_uri cascade;
 create table public.client_redirect_uri (
    id serial primary key,
    client_id integer not null references public.client (id) on delete cascade,

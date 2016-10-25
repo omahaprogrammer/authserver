@@ -7,9 +7,9 @@
     <class>com.pazdev.authserver.model.Client</class>
     <class>com.pazdev.authserver.model.ClientContact</class>
     <class>com.pazdev.authserver.model.Profile</class>
-    <class>com.pazdev.authserver.model.ClientLogo</class>
     <class>com.pazdev.authserver.model.ClientUri</class>
     <class>com.pazdev.authserver.model.ClientName</class>
+    <class>com.pazdev.authserver.model.ClientPolicy</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/authserver"/>

@@ -29,7 +29,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -37,15 +36,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Jonathan Paz <jonathan@pazdev.com>
  */
 @Entity
-@Table(name = "client_logo", uniqueConstraints = {
+@Table(name = "client_policy", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"client_id", "policy_uri_lang"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "ClientLogo.findAll", query = "SELECT c FROM ClientLogo c")
-    , @NamedQuery(name = "ClientLogo.findById", query = "SELECT c FROM ClientLogo c WHERE c.id = :id")
-    , @NamedQuery(name = "ClientLogo.findByPolicyUri", query = "SELECT c FROM ClientLogo c WHERE c.policyUri = :policyUri")
-    , @NamedQuery(name = "ClientLogo.findByPolicyUriLang", query = "SELECT c FROM ClientLogo c WHERE c.policyUriLang = :policyUriLang")})
-public class ClientLogo implements Serializable {
+    @NamedQuery(name = "ClientPolicy.findAll", query = "SELECT c FROM ClientPolicy c")
+    , @NamedQuery(name = "ClientPolicy.findById", query = "SELECT c FROM ClientPolicy c WHERE c.id = :id")
+    , @NamedQuery(name = "ClientPolicy.findByPolicyUri", query = "SELECT c FROM ClientPolicy c WHERE c.policyUri = :policyUri")
+    , @NamedQuery(name = "ClientPolicy.findByPolicyUriLang", query = "SELECT c FROM ClientPolicy c WHERE c.policyUriLang = :policyUriLang")})
+public class ClientPolicy implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -55,24 +54,22 @@ public class ClientLogo implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 2147483647)
-    @Column(name = "policy_uri", nullable = false, length = 2147483647)
+    @Column(name = "policy_uri", nullable = false)
     private String policyUri;
-    @Size(max = 2147483647)
-    @Column(name = "policy_uri_lang", length = 2147483647)
+    @Column(name = "policy_uri_lang")
     private String policyUriLang;
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     @ManyToOne
     private Client clientId;
 
-    public ClientLogo() {
+    public ClientPolicy() {
     }
 
-    public ClientLogo(Integer id) {
+    public ClientPolicy(Integer id) {
         this.id = id;
     }
 
-    public ClientLogo(Integer id, String policyUri) {
+    public ClientPolicy(Integer id, String policyUri) {
         this.id = id;
         this.policyUri = policyUri;
     }
@@ -119,10 +116,10 @@ public class ClientLogo implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ClientLogo)) {
+        if (!(object instanceof ClientPolicy)) {
             return false;
         }
-        ClientLogo other = (ClientLogo) object;
+        ClientPolicy other = (ClientPolicy) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -131,7 +128,7 @@ public class ClientLogo implements Serializable {
 
     @Override
     public String toString() {
-        return "com.pazdev.authserver.ClientLogo[ id=" + id + " ]";
+        return "com.pazdev.authserver.ClientPolicy[ id=" + id + " ]";
     }
     
 }

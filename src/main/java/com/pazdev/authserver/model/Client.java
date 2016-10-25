@@ -16,8 +16,9 @@
 package com.pazdev.authserver.model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.Set;
+import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -34,7 +35,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -68,49 +68,42 @@ public class Client implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 2147483647)
-    @Column(name = "client_id", nullable = false, length = 2147483647)
+    @Column(name = "client_id", nullable = false)
     private String clientId;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 2147483647)
-    @Column(name = "client_secret", nullable = false, length = 2147483647)
+    @Column(name = "client_secret", nullable = false)
     private String clientSecret;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 2147483647)
-    @Column(name = "client_type", nullable = false, length = 2147483647)
+    @Column(name = "client_type", nullable = false)
     private String clientType;
     @Basic(optional = false)
     @NotNull
     @Column(name = "issue_date", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date issueDate;
+    private ZonedDateTime issueDate;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 2147483647)
-    @Column(name = "grant_types", nullable = false, length = 2147483647)
+    @Column(name = "grant_types", nullable = false)
     private String grantTypes;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 2147483647)
-    @Column(name = "response_types", nullable = false, length = 2147483647)
+    @Column(name = "response_types", nullable = false)
     private String responseTypes;
-    @Size(max = 2147483647)
-    @Column(name = "scopes", length = 2147483647)
+    @Column(name = "scopes")
     private String scopes;
     @Lob
     @Column(name = "software_id")
-    private Object softwareId;
-    @Size(max = 2147483647)
-    @Column(name = "software_version", length = 2147483647)
+    private UUID softwareId;
+    @Column(name = "software_version")
     private String softwareVersion;
     @OneToMany(mappedBy = "clientId")
     private Set<ClientUri> clientUriSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientId")
     private Set<ClientContact> clientContactSet;
     @OneToMany(mappedBy = "clientId")
-    private Set<ClientLogo> clientLogoSet;
+    private Set<ClientPolicy> clientLogoSet;
     @OneToMany(mappedBy = "clientId")
     private Set<ClientName> clientNameSet;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientId")
@@ -123,7 +116,7 @@ public class Client implements Serializable {
         this.id = id;
     }
 
-    public Client(Integer id, String clientId, String clientSecret, String clientType, Date issueDate, String grantTypes, String responseTypes) {
+    public Client(Integer id, String clientId, String clientSecret, String clientType, ZonedDateTime issueDate, String grantTypes, String responseTypes) {
         this.id = id;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
@@ -165,11 +158,11 @@ public class Client implements Serializable {
         this.clientType = clientType;
     }
 
-    public Date getIssueDate() {
+    public ZonedDateTime getIssueDate() {
         return issueDate;
     }
 
-    public void setIssueDate(Date issueDate) {
+    public void setIssueDate(ZonedDateTime issueDate) {
         this.issueDate = issueDate;
     }
 
@@ -197,11 +190,11 @@ public class Client implements Serializable {
         this.scopes = scopes;
     }
 
-    public Object getSoftwareId() {
+    public UUID getSoftwareId() {
         return softwareId;
     }
 
-    public void setSoftwareId(Object softwareId) {
+    public void setSoftwareId(UUID softwareId) {
         this.softwareId = softwareId;
     }
 
@@ -232,11 +225,11 @@ public class Client implements Serializable {
     }
 
     @XmlTransient
-    public Set<ClientLogo> getClientLogoSet() {
+    public Set<ClientPolicy> getClientLogoSet() {
         return clientLogoSet;
     }
 
-    public void setClientLogoSet(Set<ClientLogo> clientLogoSet) {
+    public void setClientLogoSet(Set<ClientPolicy> clientLogoSet) {
         this.clientLogoSet = clientLogoSet;
     }
 

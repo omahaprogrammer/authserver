@@ -28,7 +28,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -51,13 +50,11 @@ public class ClientContact implements Serializable {
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
-    @Size(max = 2147483647)
-    @Column(name = "personal_name", length = 2147483647)
+    @Column(name = "personal_name")
     private String personalName;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 2147483647)
-    @Column(name = "email_address", nullable = false, length = 2147483647)
+    @Column(name = "email_address", nullable = false)
     private String emailAddress;
     @JoinColumn(name = "client_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
