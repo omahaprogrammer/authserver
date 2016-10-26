@@ -72,6 +72,7 @@ public class ProfileService {
         byte[] testbytes;
         try {
             SecretKey key = fac.generateSecret(spec);
+            spec.clearPassword();
             testbytes = key.getEncoded();
         } catch (InvalidKeySpecException e) {
             throw new RuntimeException(e);
