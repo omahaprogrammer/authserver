@@ -39,10 +39,10 @@ import javax.persistence.criteria.Root;
  */
 public class ProfileService {
     private final EntityManager em;
-    private final @Password Provider<SecretKeyFactory> fac;
+    private final @Password SecretKeyFactory fac;
 
     @Inject
-    public ProfileService(EntityManager em, @Password Provider<SecretKeyFactory> fac) {
+    public ProfileService(EntityManager em, @Password SecretKeyFactory fac) {
         this.em = em;
         this.fac = fac;
     }
@@ -71,7 +71,7 @@ public class ProfileService {
         Arrays.fill(password, '\0');
         byte[] testbytes;
         try {
-            SecretKey key = fac.get().generateSecret(spec);
+            SecretKey key = fac.generateSecret(spec);
             testbytes = key.getEncoded();
         } catch (InvalidKeySpecException e) {
             throw new RuntimeException(e);
