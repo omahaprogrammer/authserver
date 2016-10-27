@@ -27,11 +27,6 @@ CREATE TABLE public.profile
    password_bytes bytea NOT NULL, 
    salt bytea NOT NULL, 
    rounds integer NOT NULL,
-   family_name text, 
-   given_name text, 
-   middle_name text, 
-   nickname text, 
-   profile_name text, 
    picture bytea, 
    website text, 
    email text, 
@@ -51,6 +46,46 @@ CREATE TABLE public.profile
    updated_at timestamp with time zone
 )
 ;
+drop table if exists public.profile_family_name cascade;
+create table public.profile_family_name (
+   id serial primary key,
+   profile_id integer references public.profile (id) on delete cascade,
+   profile_family_name text not null,
+   profile_family_name_lang text,
+   unique (profile_id, profile_family_name_lang)
+);
+drop table if exists public.profile_given_name cascade;
+create table public.profile_given_name (
+   id serial primary key,
+   profile_id integer references public.profile (id) on delete cascade,
+   profile_given_name text not null,
+   profile_given_name_lang text,
+   unique (profile_id, profile_given_name_lang)
+);
+drop table if exists public.profile_middle_name cascade;
+create table public.profile_middle_name (
+   id serial primary key,
+   profile_id integer references public.profile (id) on delete cascade,
+   profile_middle_name text not null,
+   profile_middle_name_lang text,
+   unique (profile_id, profile_middle_name_lang)
+);
+drop table if exists public.profile_nickname cascade;
+create table public.profile_nickname (
+   id serial primary key,
+   profile_id integer references public.profile (id) on delete cascade,
+   profile_nickname text not null,
+   profile_nickname_lang text,
+   unique (profile_id, profile_nickname_lang)
+);
+drop table if exists public.profile_name cascade;
+create table public.profile_name (
+   id serial primary key,
+   profile_id integer references public.profile (id) on delete cascade,
+   profile_name text not null,
+   profile_name_lang text,
+   unique (profile_id, profile_name_lang)
+);
 drop table if exists public.profile_attribute cascade;
 create table public.profile_attribute (
    id serial primary key,

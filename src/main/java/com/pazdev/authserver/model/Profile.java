@@ -16,7 +16,8 @@
 package com.pazdev.authserver.model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -49,11 +50,6 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Profile.findById", query = "SELECT p FROM Profile p WHERE p.id = :id")
     , @NamedQuery(name = "Profile.findBySub", query = "SELECT p FROM Profile p WHERE p.sub = :sub")
     , @NamedQuery(name = "Profile.findByPreferredUsername", query = "SELECT p FROM Profile p WHERE p.preferredUsername = :preferredUsername")
-    , @NamedQuery(name = "Profile.findByFamilyName", query = "SELECT p FROM Profile p WHERE p.familyName = :familyName")
-    , @NamedQuery(name = "Profile.findByGivenName", query = "SELECT p FROM Profile p WHERE p.givenName = :givenName")
-    , @NamedQuery(name = "Profile.findByMiddleName", query = "SELECT p FROM Profile p WHERE p.middleName = :middleName")
-    , @NamedQuery(name = "Profile.findByNickname", query = "SELECT p FROM Profile p WHERE p.nickname = :nickname")
-    , @NamedQuery(name = "Profile.findByProfileName", query = "SELECT p FROM Profile p WHERE p.profileName = :profileName")
     , @NamedQuery(name = "Profile.findByWebsite", query = "SELECT p FROM Profile p WHERE p.website = :website")
     , @NamedQuery(name = "Profile.findByEmail", query = "SELECT p FROM Profile p WHERE p.email = :email")
     , @NamedQuery(name = "Profile.findByEmailVerified", query = "SELECT p FROM Profile p WHERE p.emailVerified = :emailVerified")
@@ -100,16 +96,6 @@ public class Profile implements Serializable {
     @NotNull
     @Column(name = "rounds", nullable = false)
     private Integer rounds;
-    @Column(name = "family_name")
-    private String familyName;
-    @Column(name = "given_name")
-    private String givenName;
-    @Column(name = "middle_name")
-    private String middleName;
-    @Column(name = "nickname")
-    private String nickname;
-    @Column(name = "profile_name")
-    private String profileName;
     @Lob
     @Column(name = "picture")
     private byte[] picture;
@@ -126,7 +112,7 @@ public class Profile implements Serializable {
     private String gender;
     @Column(name = "birthdate")
     @Temporal(TemporalType.DATE)
-    private Date birthdate;
+    private LocalDate birthdate;
     @Column(name = "zoneinfo")
     private String zoneinfo;
     @Column(name = "locale")
@@ -151,9 +137,19 @@ public class Profile implements Serializable {
     private String addressCountry;
     @Column(name = "updated_at")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
+    private ZonedDateTime updatedAt;
     @OneToMany(mappedBy = "accountId")
     private Set<ProfileAttribute> profileAttributeSet;
+    @OneToMany(mappedBy = "profileId")
+    private Set<ProfileFamilyName> profileFamilyNameSet;
+    @OneToMany(mappedBy = "profileId")
+    private Set<ProfileName> profileNameSet;
+    @OneToMany(mappedBy = "profileId")
+    private Set<ProfileMiddleName> profileMiddleNameSet;
+    @OneToMany(mappedBy = "profileId")
+    private Set<ProfileGivenName> profileGivenNameSet;
+    @OneToMany(mappedBy = "profileId")
+    private Set<ProfileNickname> profileNicknameSet;
 
     public Profile() {
     }
@@ -221,46 +217,6 @@ public class Profile implements Serializable {
         this.rounds = rounds;
     }
 
-    public String getFamilyName() {
-        return familyName;
-    }
-
-    public void setFamilyName(String familyName) {
-        this.familyName = familyName;
-    }
-
-    public String getGivenName() {
-        return givenName;
-    }
-
-    public void setGivenName(String givenName) {
-        this.givenName = givenName;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getProfileName() {
-        return profileName;
-    }
-
-    public void setProfileName(String profileName) {
-        this.profileName = profileName;
-    }
-
     public byte[] getPicture() {
         return picture;
     }
@@ -301,11 +257,11 @@ public class Profile implements Serializable {
         this.gender = gender;
     }
 
-    public Date getBirthdate() {
+    public LocalDate getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(Date birthdate) {
+    public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
     }
 
@@ -389,11 +345,11 @@ public class Profile implements Serializable {
         this.addressCountry = addressCountry;
     }
 
-    public Date getUpdatedAt() {
+    public ZonedDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(ZonedDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -429,6 +385,51 @@ public class Profile implements Serializable {
     @Override
     public String toString() {
         return "com.pazdev.authserver.Profile[ id=" + id + " ]";
+    }
+
+    @XmlTransient
+    public Set<ProfileFamilyName> getProfileFamilyNameSet() {
+        return profileFamilyNameSet;
+    }
+
+    public void setProfileFamilyNameSet(Set<ProfileFamilyName> profileFamilyNameSet) {
+        this.profileFamilyNameSet = profileFamilyNameSet;
+    }
+
+    @XmlTransient
+    public Set<ProfileName> getProfileNameSet() {
+        return profileNameSet;
+    }
+
+    public void setProfileNameSet(Set<ProfileName> profileNameSet) {
+        this.profileNameSet = profileNameSet;
+    }
+
+    @XmlTransient
+    public Set<ProfileMiddleName> getProfileMiddleNameSet() {
+        return profileMiddleNameSet;
+    }
+
+    public void setProfileMiddleNameSet(Set<ProfileMiddleName> profileMiddleNameSet) {
+        this.profileMiddleNameSet = profileMiddleNameSet;
+    }
+
+    @XmlTransient
+    public Set<ProfileGivenName> getProfileGivenNameSet() {
+        return profileGivenNameSet;
+    }
+
+    public void setProfileGivenNameSet(Set<ProfileGivenName> profileGivenNameSet) {
+        this.profileGivenNameSet = profileGivenNameSet;
+    }
+
+    @XmlTransient
+    public Set<ProfileNickname> getProfileNicknameSet() {
+        return profileNicknameSet;
+    }
+
+    public void setProfileNicknameSet(Set<ProfileNickname> profileNicknameSet) {
+        this.profileNicknameSet = profileNicknameSet;
     }
     
 }

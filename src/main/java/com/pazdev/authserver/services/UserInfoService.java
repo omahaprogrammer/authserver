@@ -37,12 +37,12 @@ import javax.persistence.criteria.Root;
  *
  * @author Jonathan Paz <jonathan@pazdev.com>
  */
-public class ProfileService {
+public class UserInfoService {
     private final EntityManager em;
     private final @Password SecretKeyFactory fac;
 
     @Inject
-    public ProfileService(EntityManager em, @Password SecretKeyFactory fac) {
+    public UserInfoService(EntityManager em, @Password SecretKeyFactory fac) {
         this.em = em;
         this.fac = fac;
     }
