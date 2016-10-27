@@ -17,6 +17,7 @@
     <class>com.pazdev.authserver.model.ProfileGivenName</class>
     <class>com.pazdev.authserver.model.ProfileFamilyName</class>
     <class>com.pazdev.authserver.model.ProfileNickname</class>
+    <class>com.pazdev.authserver.model.ProfileAddress</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/authserver"/>

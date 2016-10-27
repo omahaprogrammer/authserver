@@ -37,15 +37,22 @@ CREATE TABLE public.profile
    locale text, 
    phone_number text, 
    phone_number_verified boolean NOT NULL DEFAULT false, 
-   address_formatted text, 
-   address_street_address text,
-   address_locality text,
-   address_region text,
-   address_postal_code text,
-   address_country text, 
    updated_at timestamp with time zone
 )
 ;
+drop table if exists public.profile_address cascade;
+create table public.profile_address (
+   id serial primary key,
+   profile_id integer references public.profile (id) on delete cascade,
+   formatted text, 
+   street_address text,
+   locality text,
+   region text,
+   postal_code text,
+   country text, 
+   address_lang text,
+   unique(profile_id, address_lang)
+);
 drop table if exists public.profile_family_name cascade;
 create table public.profile_family_name (
    id serial primary key,

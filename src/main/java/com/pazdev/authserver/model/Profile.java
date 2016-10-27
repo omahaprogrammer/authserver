@@ -18,6 +18,7 @@ package com.pazdev.authserver.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -85,17 +86,17 @@ public class Profile implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Lob
-    @Column(name = "password_bytes", nullable = false)
+    @Column(name = "password_bytes")
     private byte[] passwordBytes;
     @Basic(optional = false)
     @NotNull
     @Lob
-    @Column(name = "salt", nullable = false)
+    @Column(name = "salt")
     private byte[] salt;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "rounds", nullable = false)
-    private Integer rounds;
+    @Column(name = "rounds")
+    private int rounds;
     @Lob
     @Column(name = "picture")
     private byte[] picture;
@@ -150,6 +151,8 @@ public class Profile implements Serializable {
     private Set<ProfileGivenName> profileGivenNameSet;
     @OneToMany(mappedBy = "profileId")
     private Set<ProfileNickname> profileNicknameSet;
+    @OneToMany(mappedBy = "profileId")
+    private Set<ProfileAddress> profileAddressSet;
 
     public Profile() {
     }
@@ -209,11 +212,11 @@ public class Profile implements Serializable {
         this.salt = salt;
     }
 
-    public Integer getRounds() {
+    public int getRounds() {
         return rounds;
     }
 
-    public void setRounds(Integer rounds) {
+    public void setRounds(int rounds) {
         this.rounds = rounds;
     }
 
@@ -430,6 +433,16 @@ public class Profile implements Serializable {
 
     public void setProfileNicknameSet(Set<ProfileNickname> profileNicknameSet) {
         this.profileNicknameSet = profileNicknameSet;
+    }
+
+
+    @XmlTransient
+    public Set<ProfileAddress> getProfileAddressSet() {
+        return profileAddressSet;
+    }
+
+    public void setProfileAddressSet(Set<ProfileAddress> profileAddressSet) {
+        this.profileAddressSet = profileAddressSet;
     }
     
 }
