@@ -15,23 +15,27 @@
  */
 package com.pazdev.authserver.services;
 
-import com.google.inject.Provider;
+import com.nimbusds.langtag.LangTag;
+import com.nimbusds.oauth2.sdk.id.Subject;
+import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import com.pazdev.authserver.guice.annotation.Password;
+import com.pazdev.authserver.model.MultiLanguageClaim;
 import com.pazdev.authserver.model.Profile;
-import com.pazdev.authserver.model.Profile_;
+import com.pazdev.authserver.model.ProfileFamilyName;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 /**
  *
@@ -47,12 +51,32 @@ public class UserInfoService {
         this.fac = fac;
     }
 
-    public Optional<Profile> getProfile(String sub) {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Profile> cq = cb.createQuery(Profile.class);
-        Root<Profile> root = cq.from(Profile.class);
-        cq.where(cb.equal(root.get(Profile_.sub), sub));
-        TypedQuery<Profile> q = em.createQuery(cq);
+    public Optional<UserInfo> getUserInfo(String sub) {
+        Optional<UserInfo> retval = Optional.empty();
+        Optional<Profile> profile = getProfile(sub);
+        String foundsub = profile.map(Profile::getSub).orElse("not found");
+        UserInfo userInfo = new UserInfo(new Subject(foundsub));
+        
+        updateClaim(userInfo::setFamilyName, profile.map(Profile::getProfileFamilyNameSet).orElse(Collections.emptySet()));
+        updateClaim(userInfo::setGivenName, profile.map(Profile::getProfileGivenNameSet).orElse(Collections.emptySet()));
+        updateClaim(userInfo::setMiddleName, profile.map(Profile::getProfileMiddleNameSet).orElse(Collections.emptySet()));
+        updateClaim(userInfo::setNickname, profile.map(Profile::getProfileNicknameSet).orElse(Collections.emptySet()));
+        updateClaim(userInfo::setName, profile.map(Profile::getProfileNameSet).orElse(Collections.emptySet()));
+        
+        if (profile.isPresent()) {
+            retval = Optional.of(userInfo);
+        }
+        return retval;
+    }
+
+    private <T extends MultiLanguageClaim> void updateClaim(BiConsumer<String, LangTag> claimSetter, Set<T> claimValues) {
+        claimValues.parallelStream().forEach((it) -> {
+            claimSetter.accept(it.getValue(), it.getLanguageTag().orElse(null));
+        });
+    }
+
+    private Optional<Profile> getProfile(String sub) {
+        TypedQuery<Profile> q = em.createNamedQuery("Profile.findBySub", Profile.class);
         List<Profile> profiles = q.getResultList();
         Optional<Profile> profile = Optional.empty();
         if (profiles.size() == 1) {
@@ -61,7 +85,7 @@ public class UserInfoService {
         return profile;
     }
 
-    public Optional<Profile> authenticateProfile(String sub, char[] password) {
+    private Optional<Profile> authenticateProfile(String sub, char[] password) {
         password = Arrays.copyOf(password, password.length);
         Optional<Profile> profile = getProfile(sub);
         byte[] passwordBytes = profile.map(Profile::getPasswordBytes).orElse(new byte[32]);
