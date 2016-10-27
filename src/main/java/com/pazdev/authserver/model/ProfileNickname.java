@@ -15,7 +15,10 @@
  */
 package com.pazdev.authserver.model;
 
+import com.nimbusds.langtag.LangTag;
+import com.nimbusds.langtag.LangTagException;
 import java.io.Serializable;
+import java.util.Optional;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,7 +45,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "ProfileNickname.findById", query = "SELECT p FROM ProfileNickname p WHERE p.id = :id")
     , @NamedQuery(name = "ProfileNickname.findByProfileNickname", query = "SELECT p FROM ProfileNickname p WHERE p.profileNickname = :profileNickname")
     , @NamedQuery(name = "ProfileNickname.findByProfileNicknameLang", query = "SELECT p FROM ProfileNickname p WHERE p.profileNicknameLang = :profileNicknameLang")})
-public class ProfileNickname implements Serializable {
+public class ProfileNickname implements Serializable, MultiLanguageClaim {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -129,4 +132,18 @@ public class ProfileNickname implements Serializable {
         return "com.pazdev.authserver.model.ProfileNickname[ id=" + id + " ]";
     }
     
+
+    @Override
+    public String getValue() {
+        return profileNickname;
+    }
+
+    @Override
+    public Optional<LangTag> getLanguageTag() {
+        try {
+            return Optional.ofNullable(LangTag.parse(profileNicknameLang));
+        } catch (LangTagException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

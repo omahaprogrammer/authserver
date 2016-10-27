@@ -15,7 +15,12 @@
  */
 package com.pazdev.authserver.model;
 
+import com.nimbusds.langtag.LangTag;
+import com.nimbusds.langtag.LangTagException;
 import java.io.Serializable;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,7 +49,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "ClientPolicy.findById", query = "SELECT c FROM ClientPolicy c WHERE c.id = :id")
     , @NamedQuery(name = "ClientPolicy.findByPolicyUri", query = "SELECT c FROM ClientPolicy c WHERE c.policyUri = :policyUri")
     , @NamedQuery(name = "ClientPolicy.findByPolicyUriLang", query = "SELECT c FROM ClientPolicy c WHERE c.policyUriLang = :policyUriLang")})
-public class ClientPolicy implements Serializable {
+public class ClientPolicy implements Serializable, MultiLanguageClaim {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -130,5 +135,19 @@ public class ClientPolicy implements Serializable {
     public String toString() {
         return "com.pazdev.authserver.ClientPolicy[ id=" + id + " ]";
     }
-    
+
+    @Override
+    public String getValue() {
+        return policyUri;
+    }
+
+    @Override
+    public Optional<LangTag> getLanguageTag() {
+        try {
+            return Optional.ofNullable(LangTag.parse(policyUriLang));
+        } catch (LangTagException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+   
 }

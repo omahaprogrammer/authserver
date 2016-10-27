@@ -15,7 +15,12 @@
  */
 package com.pazdev.authserver.model;
 
+import com.nimbusds.langtag.LangTag;
+import com.nimbusds.langtag.LangTagException;
 import java.io.Serializable;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,7 +34,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -43,7 +47,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ClientLogo.findAll", query = "SELECT c FROM ClientLogo c")
     , @NamedQuery(name = "ClientLogo.findById", query = "SELECT c FROM ClientLogo c WHERE c.id = :id")
     , @NamedQuery(name = "ClientLogo.findByLogoLang", query = "SELECT c FROM ClientLogo c WHERE c.logoLang = :logoLang")})
-public class ClientLogo implements Serializable {
+public class ClientLogo implements Serializable, MultiLanguageClaim {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -129,6 +133,20 @@ public class ClientLogo implements Serializable {
     @Override
     public String toString() {
         return "com.pazdev.authserver.model.ClientLogo[ id=" + id + " ]";
+    }
+
+    @Override
+    public String getValue() {
+        return String.format("/client/%s/logo/%s", clientId.getClientId(), logoLang != null ? logoLang : "default");
+    }
+
+    @Override
+    public Optional<LangTag> getLanguageTag() {
+        try {
+            return Optional.ofNullable(LangTag.parse(logoLang));
+        } catch (LangTagException ex) {
+            throw new RuntimeException(ex);
+        }
     }
     
 }
