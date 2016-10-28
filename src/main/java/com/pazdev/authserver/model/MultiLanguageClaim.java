@@ -21,8 +21,9 @@ import java.util.Optional;
 /**
  *
  * @author Jonathan Paz <jonathan@pazdev.com>
+ * @param <T>
  */
-public interface MultiLanguageClaim {
-    public String getValue();
+public interface MultiLanguageClaim<T> {
+    public T getValue();
     public Optional<LangTag> getLanguageTag();
 }

@@ -298,5 +298,5 @@ public class Client implements Serializable {
     public void setClientLogoSet(Set<ClientLogo> clientLogoSet) {
         this.clientLogoSet = clientLogoSet;
     }
-    
+
 }

@@ -18,6 +18,7 @@ package com.pazdev.authserver.model;
 import com.nimbusds.langtag.LangTag;
 import com.nimbusds.langtag.LangTagException;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.Optional;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -47,7 +48,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "ClientUri.findById", query = "SELECT c FROM ClientUri c WHERE c.id = :id")
     , @NamedQuery(name = "ClientUri.findByClientUri", query = "SELECT c FROM ClientUri c WHERE c.clientUri = :clientUri")
     , @NamedQuery(name = "ClientUri.findByClientUriLang", query = "SELECT c FROM ClientUri c WHERE c.clientUriLang = :clientUriLang")})
-public class ClientUri implements Serializable, MultiLanguageClaim {
+public class ClientUri implements Serializable, MultiLanguageClaim<URI> {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -135,8 +136,8 @@ public class ClientUri implements Serializable, MultiLanguageClaim {
     }
 
     @Override
-    public String getValue() {
-        return clientUri;
+    public URI getValue() {
+        return URI.create(clientUri);
     }
 
     @Override

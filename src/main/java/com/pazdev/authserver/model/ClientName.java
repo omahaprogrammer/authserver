@@ -47,7 +47,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "ClientName.findById", query = "SELECT c FROM ClientName c WHERE c.id = :id")
     , @NamedQuery(name = "ClientName.findByClientName", query = "SELECT c FROM ClientName c WHERE c.clientName = :clientName")
     , @NamedQuery(name = "ClientName.findByClientLang", query = "SELECT c FROM ClientName c WHERE c.clientLang = :clientLang")})
-public class ClientName implements Serializable, MultiLanguageClaim {
+public class ClientName implements Serializable, MultiLanguageClaim<String> {
 
     private static final long serialVersionUID = 1L;
     @Id

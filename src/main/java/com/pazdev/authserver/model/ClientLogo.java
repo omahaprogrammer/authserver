@@ -18,9 +18,8 @@ package com.pazdev.authserver.model;
 import com.nimbusds.langtag.LangTag;
 import com.nimbusds.langtag.LangTagException;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,12 +27,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -47,7 +44,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ClientLogo.findAll", query = "SELECT c FROM ClientLogo c")
     , @NamedQuery(name = "ClientLogo.findById", query = "SELECT c FROM ClientLogo c WHERE c.id = :id")
     , @NamedQuery(name = "ClientLogo.findByLogoLang", query = "SELECT c FROM ClientLogo c WHERE c.logoLang = :logoLang")})
-public class ClientLogo implements Serializable, MultiLanguageClaim {
+public class ClientLogo implements Serializable, MultiLanguageClaim<URI> {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -55,11 +52,9 @@ public class ClientLogo implements Serializable, MultiLanguageClaim {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
-    @Column(name = "logo_image")
-    private byte[] logoImage;
+    @JoinColumn(name = "logo_image", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private UploadedContent logoImage;
     @Column(name = "logo_lang")
     private String logoLang;
     @JoinColumn(name = "client_id", referencedColumnName = "id")
@@ -73,7 +68,7 @@ public class ClientLogo implements Serializable, MultiLanguageClaim {
         this.id = id;
     }
 
-    public ClientLogo(Integer id, byte[] logoImage) {
+    public ClientLogo(Integer id, UploadedContent logoImage) {
         this.id = id;
         this.logoImage = logoImage;
     }
@@ -86,11 +81,11 @@ public class ClientLogo implements Serializable, MultiLanguageClaim {
         this.id = id;
     }
 
-    public byte[] getLogoImage() {
+    public UploadedContent getLogoImage() {
         return logoImage;
     }
 
-    public void setLogoImage(byte[] logoImage) {
+    public void setLogoImage(UploadedContent logoImage) {
         this.logoImage = logoImage;
     }
 
@@ -136,8 +131,8 @@ public class ClientLogo implements Serializable, MultiLanguageClaim {
     }
 
     @Override
-    public String getValue() {
-        return String.format("/client/%s/logo/%s", clientId.getClientId(), logoLang != null ? logoLang : "default");
+    public URI getValue() {
+        return URI.create(String.format("/client/%s/logo/%s", clientId.getClientId(), logoLang != null ? logoLang : "default"));
     }
 
     @Override
@@ -148,5 +143,5 @@ public class ClientLogo implements Serializable, MultiLanguageClaim {
             throw new RuntimeException(ex);
         }
     }
-    
+
 }

@@ -18,6 +18,13 @@
  * Created: Oct 24, 2016
  */
 
+drop table if exists public.uploaded_content cascade;
+create table public.uploaded_content (
+   id serial primary key,
+   public_id uuid not null,
+   contents bytea not null,
+   mime_type text not null
+);
 drop table if exists public.profile cascade;
 CREATE TABLE public.profile
 (
@@ -27,7 +34,7 @@ CREATE TABLE public.profile
    password_bytes bytea NOT NULL, 
    salt bytea NOT NULL, 
    rounds integer NOT NULL,
-   picture bytea, 
+   picture integer references uploaded_content (id) on delete set null, 
    website text, 
    email text, 
    email_verified boolean NOT NULL DEFAULT false, 
@@ -136,7 +143,7 @@ drop table if exists public.client_logo cascade;
 create table public.client_logo (
    id serial primary key,
    client_id integer references public.client(id) on delete cascade,
-   logo_image bytea not null,
+   logo_image integer references uploaded_content(id) on delete cascade not null,
    logo_lang text,
    unique (client_id, logo_lang)
 );

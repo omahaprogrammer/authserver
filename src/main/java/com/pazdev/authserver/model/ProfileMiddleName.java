@@ -45,7 +45,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "ProfileMiddleName.findById", query = "SELECT p FROM ProfileMiddleName p WHERE p.id = :id")
     , @NamedQuery(name = "ProfileMiddleName.findByProfileMiddleName", query = "SELECT p FROM ProfileMiddleName p WHERE p.profileMiddleName = :profileMiddleName")
     , @NamedQuery(name = "ProfileMiddleName.findByProfileMiddleNameLang", query = "SELECT p FROM ProfileMiddleName p WHERE p.profileMiddleNameLang = :profileMiddleNameLang")})
-public class ProfileMiddleName implements Serializable, MultiLanguageClaim {
+public class ProfileMiddleName implements Serializable, MultiLanguageClaim<String> {
 
     private static final long serialVersionUID = 1L;
     @Id

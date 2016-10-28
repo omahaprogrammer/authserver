@@ -18,7 +18,6 @@ package com.pazdev.authserver.model;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -26,7 +25,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -97,9 +98,9 @@ public class Profile implements Serializable {
     @NotNull
     @Column(name = "rounds")
     private int rounds;
-    @Lob
-    @Column(name = "picture")
-    private byte[] picture;
+    @JoinColumn(name = "picture", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private UploadedContent picture;
     @Column(name = "website")
     private String website;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
@@ -220,11 +221,11 @@ public class Profile implements Serializable {
         this.rounds = rounds;
     }
 
-    public byte[] getPicture() {
+    public UploadedContent getPicture() {
         return picture;
     }
 
-    public void setPicture(byte[] picture) {
+    public void setPicture(UploadedContent picture) {
         this.picture = picture;
     }
 
@@ -444,5 +445,5 @@ public class Profile implements Serializable {
     public void setProfileAddressSet(Set<ProfileAddress> profileAddressSet) {
         this.profileAddressSet = profileAddressSet;
     }
-    
+
 }
