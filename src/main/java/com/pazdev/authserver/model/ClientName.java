@@ -15,9 +15,8 @@
  */
 package com.pazdev.authserver.model;
 
-import com.nimbusds.langtag.LangTag;
-import com.nimbusds.langtag.LangTagException;
 import java.io.Serializable;
+import java.util.Locale;
 import java.util.Optional;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -140,12 +139,12 @@ public class ClientName implements Serializable, MultiLanguageClaim<String> {
     }
 
     @Override
-    public Optional<LangTag> getLanguageTag() {
-        try {
-            return Optional.ofNullable(LangTag.parse(clientLang));
-        } catch (LangTagException ex) {
-            throw new RuntimeException(ex);
+    public Optional<Locale> getLanguageTag() {
+        Optional<Locale> retval = Optional.empty();
+        if (clientLang != null) {
+            retval = Optional.of(Locale.forLanguageTag(clientLang));
         }
+        return retval;
     }
    
 }

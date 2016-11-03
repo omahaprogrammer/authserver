@@ -34,6 +34,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.annotations.Type;
 
 /**
  *
@@ -45,6 +46,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "UploadedContent.findAll", query = "SELECT u FROM UploadedContent u")
     , @NamedQuery(name = "UploadedContent.findById", query = "SELECT u FROM UploadedContent u WHERE u.id = :id")
+    , @NamedQuery(name = "UploadedContent.findByPublicId", query = "SELECT u FROM UploadedContent u WHERE u.public_id = :id")
     , @NamedQuery(name = "UploadedContent.findByMimeType", query = "SELECT u FROM UploadedContent u WHERE u.mimeType = :mimeType")})
 public class UploadedContent implements Serializable {
 
@@ -56,13 +58,13 @@ public class UploadedContent implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Lob
-    @Column(name = "public_id")
+    @Column(name = "public_id", nullable = false)
+    @Type(type = "pg-uuid")
     private UUID publicId;
     @Basic(optional = false)
     @NotNull
     @Lob
-    @Column(name = "contents")
+    @Column(name = "contents", nullable = false)
     private byte[] contents;
     @Basic(optional = false)
     @NotNull
@@ -162,5 +164,5 @@ public class UploadedContent implements Serializable {
     public String toString() {
         return "com.pazdev.authserver.model.UploadedContent[ id=" + id + " ]";
     }
-    
+
 }

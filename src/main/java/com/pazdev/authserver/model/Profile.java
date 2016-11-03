@@ -16,8 +16,8 @@
 package com.pazdev.authserver.model;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -32,8 +32,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -87,12 +85,12 @@ public class Profile implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Lob
-    @Column(name = "password_bytes")
+    @Column(name = "password_bytes", nullable = false)
     private byte[] passwordBytes;
     @Basic(optional = false)
     @NotNull
     @Lob
-    @Column(name = "salt")
+    @Column(name = "salt", nullable = false)
     private byte[] salt;
     @Basic(optional = false)
     @NotNull
@@ -113,7 +111,6 @@ public class Profile implements Serializable {
     @Column(name = "gender")
     private String gender;
     @Column(name = "birthdate")
-    @Temporal(TemporalType.DATE)
     private LocalDate birthdate;
     @Column(name = "zoneinfo")
     private String zoneinfo;
@@ -138,8 +135,7 @@ public class Profile implements Serializable {
     @Column(name = "address_country")
     private String addressCountry;
     @Column(name = "updated_at")
-    @Temporal(TemporalType.TIMESTAMP)
-    private ZonedDateTime updatedAt;
+    private Instant updatedAt;
     @OneToMany(mappedBy = "accountId")
     private Set<ProfileAttribute> profileAttributeSet;
     @OneToMany(mappedBy = "profileId")
@@ -349,11 +345,11 @@ public class Profile implements Serializable {
         this.addressCountry = addressCountry;
     }
 
-    public ZonedDateTime getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(ZonedDateTime updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
 

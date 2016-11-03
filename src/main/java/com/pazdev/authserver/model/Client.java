@@ -16,6 +16,7 @@
 package com.pazdev.authserver.model;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.UUID;
@@ -26,17 +27,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.hibernate.annotations.Type;
 
 /**
  *
@@ -81,8 +80,7 @@ public class Client implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "issue_date", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private ZonedDateTime issueDate;
+    private Instant issueDate;
     @Basic(optional = false)
     @NotNull
     @Column(name = "grant_types", nullable = false)
@@ -93,8 +91,8 @@ public class Client implements Serializable {
     private String responseTypes;
     @Column(name = "scopes")
     private String scopes;
-    @Lob
     @Column(name = "software_id")
+    @Type(type = "pg-uuid")
     private UUID softwareId;
     @Column(name = "software_version")
     private String softwareVersion;
@@ -121,7 +119,7 @@ public class Client implements Serializable {
         this.id = id;
     }
 
-    public Client(Integer id, String clientId, String clientSecret, String clientType, ZonedDateTime issueDate, String grantTypes, String responseTypes) {
+    public Client(Integer id, String clientId, String clientSecret, String clientType, Instant issueDate, String grantTypes, String responseTypes) {
         this.id = id;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
@@ -163,11 +161,11 @@ public class Client implements Serializable {
         this.clientType = clientType;
     }
 
-    public ZonedDateTime getIssueDate() {
+    public Instant getIssueDate() {
         return issueDate;
     }
 
-    public void setIssueDate(ZonedDateTime issueDate) {
+    public void setIssueDate(Instant issueDate) {
         this.issueDate = issueDate;
     }
 

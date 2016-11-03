@@ -15,7 +15,7 @@
  */
 package com.pazdev.authserver.model;
 
-import com.nimbusds.langtag.LangTag;
+import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -25,5 +25,5 @@ import java.util.Optional;
  */
 public interface MultiLanguageClaim<T> {
     public T getValue();
-    public Optional<LangTag> getLanguageTag();
+    public Optional<Locale> getLanguageTag();
 }
