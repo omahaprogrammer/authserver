@@ -16,9 +16,6 @@
 package com.pazdev.authserver.model;
 
 import java.io.Serializable;
-import java.net.URI;
-import java.util.Locale;
-import java.util.Optional;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,6 +27,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -37,39 +35,38 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Jonathan Paz <jonathan@pazdev.com>
  */
 @Entity
-@Table(name = "client_logo")
+@Table(name = "client_grant_type", catalog = "authserver", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "ClientLogo.findAll", query = "SELECT c FROM ClientLogo c")
-    , @NamedQuery(name = "ClientLogo.findById", query = "SELECT c FROM ClientLogo c WHERE c.id = :id")
-    , @NamedQuery(name = "ClientLogo.findByLogoLang", query = "SELECT c FROM ClientLogo c WHERE c.logoLang = :logoLang")})
-public class ClientLogo implements Serializable, MultiLanguageClaim<URI> {
+    @NamedQuery(name = "ClientGrantType.findAll", query = "SELECT c FROM ClientGrantType c")
+    , @NamedQuery(name = "ClientGrantType.findById", query = "SELECT c FROM ClientGrantType c WHERE c.id = :id")
+    , @NamedQuery(name = "ClientGrantType.findByGrantType", query = "SELECT c FROM ClientGrantType c WHERE c.grantType = :grantType")})
+public class ClientGrantType implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private Integer id;
-    @JoinColumn(name = "logo_image", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private UploadedContent logoImage;
-    @Column(name = "logo_lang")
-    private String logoLang;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "grant_type", nullable = false)
+    private String grantType;
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     @ManyToOne
     private Client clientId;
 
-    public ClientLogo() {
+    public ClientGrantType() {
     }
 
-    public ClientLogo(Integer id) {
+    public ClientGrantType(Integer id) {
         this.id = id;
     }
 
-    public ClientLogo(Integer id, UploadedContent logoImage) {
+    public ClientGrantType(Integer id, String grantType) {
         this.id = id;
-        this.logoImage = logoImage;
+        this.grantType = grantType;
     }
 
     public Integer getId() {
@@ -80,20 +77,12 @@ public class ClientLogo implements Serializable, MultiLanguageClaim<URI> {
         this.id = id;
     }
 
-    public UploadedContent getLogoImage() {
-        return logoImage;
+    public String getGrantType() {
+        return grantType;
     }
 
-    public void setLogoImage(UploadedContent logoImage) {
-        this.logoImage = logoImage;
-    }
-
-    public String getLogoLang() {
-        return logoLang;
-    }
-
-    public void setLogoLang(String logoLang) {
-        this.logoLang = logoLang;
+    public void setGrantType(String grantType) {
+        this.grantType = grantType;
     }
 
     public Client getClientId() {
@@ -114,10 +103,10 @@ public class ClientLogo implements Serializable, MultiLanguageClaim<URI> {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ClientLogo)) {
+        if (!(object instanceof ClientGrantType)) {
             return false;
         }
-        ClientLogo other = (ClientLogo) object;
+        ClientGrantType other = (ClientGrantType) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -126,21 +115,7 @@ public class ClientLogo implements Serializable, MultiLanguageClaim<URI> {
 
     @Override
     public String toString() {
-        return "com.pazdev.authserver.model.ClientLogo[ id=" + id + " ]";
+        return "com.pazdev.authserver.model.ClientGrantType[ id=" + id + " ]";
     }
-
-    @Override
-    public URI getValue() {
-        return URI.create(String.format("/client/%s/logo/%s", clientId.getClientId(), logoLang != null ? logoLang : "default"));
-    }
-
-    @Override
-    public Optional<Locale> getLanguageTag() {
-        Optional<Locale> retval = Optional.empty();
-        if (logoLang != null) {
-            retval = Optional.of(Locale.forLanguageTag(logoLang));
-        }
-        return retval;
-    }
-
+    
 }

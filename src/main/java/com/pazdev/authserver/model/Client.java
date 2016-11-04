@@ -17,7 +17,6 @@ package com.pazdev.authserver.model;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Basic;
@@ -59,12 +58,16 @@ import org.hibernate.annotations.Type;
     , @NamedQuery(name = "Client.findBySoftwareVersion", query = "SELECT c FROM Client c WHERE c.softwareVersion = :softwareVersion")})
 public class Client implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "client_type", nullable = false)
+    private String clientType;
     @Basic(optional = false)
     @NotNull
     @Column(name = "client_id", nullable = false)
@@ -73,43 +76,63 @@ public class Client implements Serializable {
     @NotNull
     @Column(name = "client_secret", nullable = false)
     private String clientSecret;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "client_type", nullable = false)
-    private String clientType;
+    @Column(name = "client_id_issued_at")
+    private Instant clientIdIssuedAt;
+    @Column(name = "client_secret_expires_at")
+    private Instant clientSecretExpiresAt;
+    @Column(name = "token_endpoint_auth_method")
+    private String tokenEndpointAuthMethod;
+    @Column(name = "client_name")
+    private String clientName;
+    @Column(name = "client_uri")
+    private String clientUri;
+    @Column(name = "logo_uri")
+    private String logoUri;
+    @Column(name = "scopes")
+    private String scopes;
+    @Column(name = "tos_uri")
+    private String tosUri;
+    @Column(name = "policy_uri")
+    private String policyUri;
     @Basic(optional = false)
     @NotNull
     @Column(name = "issue_date", nullable = false)
     private Instant issueDate;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "grant_types", nullable = false)
-    private String grantTypes;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "response_types", nullable = false)
-    private String responseTypes;
-    @Column(name = "scopes")
-    private String scopes;
     @Column(name = "software_id")
     @Type(type = "pg-uuid")
     private UUID softwareId;
     @Column(name = "software_version")
     private String softwareVersion;
-    @OneToMany(mappedBy = "clientId")
-    private Set<ClientUri> clientUriSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientId")
-    private Set<ClientContact> clientContactSet;
-    @OneToMany(mappedBy = "clientId")
-    private Set<ClientPolicy> clientPolicySet;
-    @OneToMany(mappedBy = "clientId")
-    private Set<ClientName> clientNameSet;
+    @Column(name = "application_type")
+    private String applicationType;
+    @Column(name = "sector_identifier_uri")
+    private String sectorIdentifierUri;
+    @Column(name = "subject_type")
+    private String subjectType;
+    @Column(name = "id_token_signed_response_alg")
+    private String idTokenSignedResponseAlg;
+    @Column(name = "id_token_encrypted_response_alg")
+    private String idTokenEncryptedResponseAlg;
+    @Column(name = "userinfo_signed_response_alg")
+    private String userinfoSignedResponseAlg;
+    @Column(name = "userinfo_encrypted_response_alg")
+    private String userinfoEncryptedResponseAlg;
+    @Column(name = "request_object_signing_alg")
+    private String requestObjectSigningAlg;
+    @Column(name = "request_object_encryption_alg")
+    private String requestObjectEncryptionAlg;
+    @Column(name = "token_endpoint_auth_signing_method")
+    private String tokenEndpointAuthSigningMethod;
+    @Column(name = "default_max_age")
+    private Integer defaultMaxAge;
+    @Column(name = "require_auth_time")
+    private Boolean requireAuthTime;
+    @Column(name = "initiate_login_uri")
+    private String initiateLoginUri;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientId")
     private Set<ClientRedirectUri> clientRedirectUriSet;
-    @OneToMany(mappedBy = "clientId")
-    private Set<ClientTerms> clientTermsSet;
-    @OneToMany(mappedBy = "clientId")
-    private Set<ClientLogo> clientLogoSet;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientId")
+    private Set<ClientContact> clientContactSet;
 
 
     public Client() {
@@ -119,14 +142,12 @@ public class Client implements Serializable {
         this.id = id;
     }
 
-    public Client(Integer id, String clientId, String clientSecret, String clientType, Instant issueDate, String grantTypes, String responseTypes) {
+    public Client(Integer id, String clientId, String clientSecret, String clientType, Instant issueDate) {
         this.id = id;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.clientType = clientType;
         this.issueDate = issueDate;
-        this.grantTypes = grantTypes;
-        this.responseTypes = responseTypes;
     }
 
     public Integer getId() {
@@ -169,22 +190,6 @@ public class Client implements Serializable {
         this.issueDate = issueDate;
     }
 
-    public String getGrantTypes() {
-        return grantTypes;
-    }
-
-    public void setGrantTypes(String grantTypes) {
-        this.grantTypes = grantTypes;
-    }
-
-    public String getResponseTypes() {
-        return responseTypes;
-    }
-
-    public void setResponseTypes(String responseTypes) {
-        this.responseTypes = responseTypes;
-    }
-
     public String getScopes() {
         return scopes;
     }
@@ -210,12 +215,12 @@ public class Client implements Serializable {
     }
 
     @XmlTransient
-    public Set<ClientUri> getClientUriSet() {
-        return clientUriSet;
+    public Set<ClientRedirectUri> getClientRedirectUriSet() {
+        return clientRedirectUriSet;
     }
 
-    public void setClientUriSet(Set<ClientUri> clientUriSet) {
-        this.clientUriSet = clientUriSet;
+    public void setClientRedirectUriSet(Set<ClientRedirectUri> clientRedirectUriSet) {
+        this.clientRedirectUriSet = clientRedirectUriSet;
     }
 
     @XmlTransient
@@ -225,33 +230,6 @@ public class Client implements Serializable {
 
     public void setClientContactSet(Set<ClientContact> clientContactSet) {
         this.clientContactSet = clientContactSet;
-    }
-
-    @XmlTransient
-    public Set<ClientPolicy> getClientPolicySet() {
-        return clientPolicySet;
-    }
-
-    public void setClientPolicySet(Set<ClientPolicy> clientPolicySet) {
-        this.clientPolicySet = clientPolicySet;
-    }
-
-    @XmlTransient
-    public Set<ClientName> getClientNameSet() {
-        return clientNameSet;
-    }
-
-    public void setClientNameSet(Set<ClientName> clientNameSet) {
-        this.clientNameSet = clientNameSet;
-    }
-
-    @XmlTransient
-    public Set<ClientRedirectUri> getClientRedirectUriSet() {
-        return clientRedirectUriSet;
-    }
-
-    public void setClientRedirectUriSet(Set<ClientRedirectUri> clientRedirectUriSet) {
-        this.clientRedirectUriSet = clientRedirectUriSet;
     }
 
     @Override
@@ -279,22 +257,172 @@ public class Client implements Serializable {
         return "com.pazdev.authserver.Client[ id=" + id + " ]";
     }
 
-    @XmlTransient
-    public Set<ClientTerms> getClientTermsSet() {
-        return clientTermsSet;
+    public Instant getClientIdIssuedAt() {
+        return clientIdIssuedAt;
     }
 
-    public void setClientTermsSet(Set<ClientTerms> clientTermsSet) {
-        this.clientTermsSet = clientTermsSet;
+    public void setClientIdIssuedAt(Instant clientIdIssuedAt) {
+        this.clientIdIssuedAt = clientIdIssuedAt;
     }
 
-    @XmlTransient
-    public Set<ClientLogo> getClientLogoSet() {
-        return clientLogoSet;
+    public Instant getClientSecretExpiresAt() {
+        return clientSecretExpiresAt;
     }
 
-    public void setClientLogoSet(Set<ClientLogo> clientLogoSet) {
-        this.clientLogoSet = clientLogoSet;
+    public void setClientSecretExpiresAt(Instant clientSecretExpiresAt) {
+        this.clientSecretExpiresAt = clientSecretExpiresAt;
+    }
+
+    public String getTokenEndpointAuthMethod() {
+        return tokenEndpointAuthMethod;
+    }
+
+    public void setTokenEndpointAuthMethod(String tokenEndpointAuthMethod) {
+        this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
+
+    public String getClientUri() {
+        return clientUri;
+    }
+
+    public void setClientUri(String clientUri) {
+        this.clientUri = clientUri;
+    }
+
+    public String getLogoUri() {
+        return logoUri;
+    }
+
+    public void setLogoUri(String logoUri) {
+        this.logoUri = logoUri;
+    }
+
+    public String getTosUri() {
+        return tosUri;
+    }
+
+    public void setTosUri(String tosUri) {
+        this.tosUri = tosUri;
+    }
+
+    public String getPolicyUri() {
+        return policyUri;
+    }
+
+    public void setPolicyUri(String policyUri) {
+        this.policyUri = policyUri;
+    }
+
+    public String getApplicationType() {
+        return applicationType;
+    }
+
+    public void setApplicationType(String applicationType) {
+        this.applicationType = applicationType;
+    }
+
+    public String getSectorIdentifierUri() {
+        return sectorIdentifierUri;
+    }
+
+    public void setSectorIdentifierUri(String sectorIdentifierUri) {
+        this.sectorIdentifierUri = sectorIdentifierUri;
+    }
+
+    public String getSubjectType() {
+        return subjectType;
+    }
+
+    public void setSubjectType(String subjectType) {
+        this.subjectType = subjectType;
+    }
+
+    public String getIdTokenSignedResponseAlg() {
+        return idTokenSignedResponseAlg;
+    }
+
+    public void setIdTokenSignedResponseAlg(String idTokenSignedResponseAlg) {
+        this.idTokenSignedResponseAlg = idTokenSignedResponseAlg;
+    }
+
+    public String getIdTokenEncryptedResponseAlg() {
+        return idTokenEncryptedResponseAlg;
+    }
+
+    public void setIdTokenEncryptedResponseAlg(String idTokenEncryptedResponseAlg) {
+        this.idTokenEncryptedResponseAlg = idTokenEncryptedResponseAlg;
+    }
+
+    public String getUserinfoSignedResponseAlg() {
+        return userinfoSignedResponseAlg;
+    }
+
+    public void setUserinfoSignedResponseAlg(String userinfoSignedResponseAlg) {
+        this.userinfoSignedResponseAlg = userinfoSignedResponseAlg;
+    }
+
+    public String getUserinfoEncryptedResponseAlg() {
+        return userinfoEncryptedResponseAlg;
+    }
+
+    public void setUserinfoEncryptedResponseAlg(String userinfoEncryptedResponseAlg) {
+        this.userinfoEncryptedResponseAlg = userinfoEncryptedResponseAlg;
+    }
+
+    public String getRequestObjectSigningAlg() {
+        return requestObjectSigningAlg;
+    }
+
+    public void setRequestObjectSigningAlg(String requestObjectSigningAlg) {
+        this.requestObjectSigningAlg = requestObjectSigningAlg;
+    }
+
+    public String getRequestObjectEncryptionAlg() {
+        return requestObjectEncryptionAlg;
+    }
+
+    public void setRequestObjectEncryptionAlg(String requestObjectEncryptionAlg) {
+        this.requestObjectEncryptionAlg = requestObjectEncryptionAlg;
+    }
+
+    public String getTokenEndpointAuthSigningMethod() {
+        return tokenEndpointAuthSigningMethod;
+    }
+
+    public void setTokenEndpointAuthSigningMethod(String tokenEndpointAuthSigningMethod) {
+        this.tokenEndpointAuthSigningMethod = tokenEndpointAuthSigningMethod;
+    }
+
+    public Integer getDefaultMaxAge() {
+        return defaultMaxAge;
+    }
+
+    public void setDefaultMaxAge(Integer defaultMaxAge) {
+        this.defaultMaxAge = defaultMaxAge;
+    }
+
+    public Boolean getRequireAuthTime() {
+        return requireAuthTime;
+    }
+
+    public void setRequireAuthTime(Boolean requireAuthTime) {
+        this.requireAuthTime = requireAuthTime;
+    }
+
+    public String getInitiateLoginUri() {
+        return initiateLoginUri;
+    }
+
+    public void setInitiateLoginUri(String initiateLoginUri) {
+        this.initiateLoginUri = initiateLoginUri;
     }
 
 }

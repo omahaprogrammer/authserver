@@ -78,6 +78,16 @@ public class Profile implements Serializable {
     @NotNull
     @Column(name = "sub", nullable = false)
     private String sub;
+    @Column(name = "profile_name")
+    private String profileName;
+    @Column(name = "given_name")
+    private String givenName;
+    @Column(name = "family_name")
+    private String familyName;
+    @Column(name = "middle_name")
+    private String middleName;
+    @Column(name = "nickname")
+    private String nickname;
     @Basic(optional = false)
     @NotNull
     @Column(name = "preferred_username", nullable = false)
@@ -440,6 +450,46 @@ public class Profile implements Serializable {
 
     public void setProfileAddressSet(Set<ProfileAddress> profileAddressSet) {
         this.profileAddressSet = profileAddressSet;
+    }
+
+    public String getProfileName() {
+        return profileName;
+    }
+
+    public void setProfileName(String profileName) {
+        this.profileName = profileName;
+    }
+
+    public String getGivenName() {
+        return givenName;
+    }
+
+    public void setGivenName(String givenName) {
+        this.givenName = givenName;
+    }
+
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
 }

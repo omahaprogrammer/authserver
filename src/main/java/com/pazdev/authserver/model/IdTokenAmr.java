@@ -16,9 +16,6 @@
 package com.pazdev.authserver.model;
 
 import java.io.Serializable;
-import java.net.URI;
-import java.util.Locale;
-import java.util.Optional;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,8 +27,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -39,15 +36,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Jonathan Paz <jonathan@pazdev.com>
  */
 @Entity
-@Table(name = "client_policy", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"client_id", "policy_uri_lang"})})
+@Table(name = "id_token_amr", catalog = "authserver", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "ClientPolicy.findAll", query = "SELECT c FROM ClientPolicy c")
-    , @NamedQuery(name = "ClientPolicy.findById", query = "SELECT c FROM ClientPolicy c WHERE c.id = :id")
-    , @NamedQuery(name = "ClientPolicy.findByPolicyUri", query = "SELECT c FROM ClientPolicy c WHERE c.policyUri = :policyUri")
-    , @NamedQuery(name = "ClientPolicy.findByPolicyUriLang", query = "SELECT c FROM ClientPolicy c WHERE c.policyUriLang = :policyUriLang")})
-public class ClientPolicy implements Serializable, MultiLanguageClaim<URI> {
+    @NamedQuery(name = "IdTokenAmr.findAll", query = "SELECT i FROM IdTokenAmr i")
+    , @NamedQuery(name = "IdTokenAmr.findById", query = "SELECT i FROM IdTokenAmr i WHERE i.id = :id")
+    , @NamedQuery(name = "IdTokenAmr.findByAmr", query = "SELECT i FROM IdTokenAmr i WHERE i.amr = :amr")})
+public class IdTokenAmr implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -57,24 +52,23 @@ public class ClientPolicy implements Serializable, MultiLanguageClaim<URI> {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "policy_uri", nullable = false)
-    private String policyUri;
-    @Column(name = "policy_uri_lang")
-    private String policyUriLang;
-    @JoinColumn(name = "client_id", referencedColumnName = "id")
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "amr", nullable = false, length = 2147483647)
+    private String amr;
+    @JoinColumn(name = "token_id", referencedColumnName = "id")
     @ManyToOne
-    private Client clientId;
+    private Token tokenId;
 
-    public ClientPolicy() {
+    public IdTokenAmr() {
     }
 
-    public ClientPolicy(Integer id) {
+    public IdTokenAmr(Integer id) {
         this.id = id;
     }
 
-    public ClientPolicy(Integer id, String policyUri) {
+    public IdTokenAmr(Integer id, String amr) {
         this.id = id;
-        this.policyUri = policyUri;
+        this.amr = amr;
     }
 
     public Integer getId() {
@@ -85,28 +79,20 @@ public class ClientPolicy implements Serializable, MultiLanguageClaim<URI> {
         this.id = id;
     }
 
-    public String getPolicyUri() {
-        return policyUri;
+    public String getAmr() {
+        return amr;
     }
 
-    public void setPolicyUri(String policyUri) {
-        this.policyUri = policyUri;
+    public void setAmr(String amr) {
+        this.amr = amr;
     }
 
-    public String getPolicyUriLang() {
-        return policyUriLang;
+    public Token getTokenId() {
+        return tokenId;
     }
 
-    public void setPolicyUriLang(String policyUriLang) {
-        this.policyUriLang = policyUriLang;
-    }
-
-    public Client getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(Client clientId) {
-        this.clientId = clientId;
+    public void setTokenId(Token tokenId) {
+        this.tokenId = tokenId;
     }
 
     @Override
@@ -119,10 +105,10 @@ public class ClientPolicy implements Serializable, MultiLanguageClaim<URI> {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ClientPolicy)) {
+        if (!(object instanceof IdTokenAmr)) {
             return false;
         }
-        ClientPolicy other = (ClientPolicy) object;
+        IdTokenAmr other = (IdTokenAmr) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -131,21 +117,7 @@ public class ClientPolicy implements Serializable, MultiLanguageClaim<URI> {
 
     @Override
     public String toString() {
-        return "com.pazdev.authserver.ClientPolicy[ id=" + id + " ]";
+        return "com.pazdev.authserver.model.IdTokenAmr[ id=" + id + " ]";
     }
-
-    @Override
-    public URI getValue() {
-        return URI.create(policyUri);
-    }
-
-    @Override
-    public Optional<Locale> getLanguageTag() {
-        Optional<Locale> retval = Optional.empty();
-        if (policyUriLang != null) {
-            retval = Optional.of(Locale.forLanguageTag(policyUriLang));
-        }
-        return retval;
-    }
-   
+    
 }

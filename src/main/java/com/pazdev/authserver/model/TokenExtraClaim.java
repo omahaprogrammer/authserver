@@ -16,75 +16,66 @@
 package com.pazdev.authserver.model;
 
 import java.io.Serializable;
-import java.util.Set;
-import java.util.UUID;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import org.hibernate.annotations.Type;
 
 /**
  *
  * @author Jonathan Paz <jonathan@pazdev.com>
  */
 @Entity
-@Table(name = "uploaded_content")
+@Table(name = "token_extra_claim", catalog = "authserver", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "UploadedContent.findAll", query = "SELECT u FROM UploadedContent u")
-    , @NamedQuery(name = "UploadedContent.findById", query = "SELECT u FROM UploadedContent u WHERE u.id = :id")
-    , @NamedQuery(name = "UploadedContent.findByPublicId", query = "SELECT u FROM UploadedContent u WHERE u.public_id = :id")
-    , @NamedQuery(name = "UploadedContent.findByMimeType", query = "SELECT u FROM UploadedContent u WHERE u.mimeType = :mimeType")})
-public class UploadedContent implements Serializable {
+    @NamedQuery(name = "TokenExtraClaim.findAll", query = "SELECT t FROM TokenExtraClaim t")
+    , @NamedQuery(name = "TokenExtraClaim.findById", query = "SELECT t FROM TokenExtraClaim t WHERE t.id = :id")
+    , @NamedQuery(name = "TokenExtraClaim.findByClaimName", query = "SELECT t FROM TokenExtraClaim t WHERE t.claimName = :claimName")
+    , @NamedQuery(name = "TokenExtraClaim.findByClaimValue", query = "SELECT t FROM TokenExtraClaim t WHERE t.claimValue = :claimValue")})
+public class TokenExtraClaim implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "public_id", nullable = false)
-    @Type(type = "pg-uuid")
-    private UUID publicId;
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "claim_name", nullable = false, length = 2147483647)
+    private String claimName;
     @Basic(optional = false)
     @NotNull
-    @Lob
-    @Column(name = "contents", nullable = false)
-    private byte[] contents;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "mime_type")
-    private String mimeType;
-    @OneToMany(mappedBy = "picture")
-    private Set<Profile> profileSet;
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "claim_value", nullable = false, length = 2147483647)
+    private String claimValue;
+    @JoinColumn(name = "token_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false)
+    private Token tokenId;
 
-    public UploadedContent() {
+    public TokenExtraClaim() {
     }
 
-    public UploadedContent(Integer id) {
+    public TokenExtraClaim(Integer id) {
         this.id = id;
     }
 
-    public UploadedContent(Integer id, UUID publicId, byte[] contents, String mimeType) {
+    public TokenExtraClaim(Integer id, String claimName, String claimValue) {
         this.id = id;
-        this.publicId = publicId;
-        this.contents = contents;
-        this.mimeType = mimeType;
+        this.claimName = claimName;
+        this.claimValue = claimValue;
     }
 
     public Integer getId() {
@@ -95,37 +86,28 @@ public class UploadedContent implements Serializable {
         this.id = id;
     }
 
-    public UUID getPublicId() {
-        return publicId;
+    public String getClaimName() {
+        return claimName;
     }
 
-    public void setPublicId(UUID publicId) {
-        this.publicId = publicId;
+    public void setClaimName(String claimName) {
+        this.claimName = claimName;
     }
 
-    public byte[] getContents() {
-        return contents;
+    public String getClaimValue() {
+        return claimValue;
     }
 
-    public void setContents(byte[] contents) {
-        this.contents = contents;
+    public void setClaimValue(String claimValue) {
+        this.claimValue = claimValue;
     }
 
-    public String getMimeType() {
-        return mimeType;
+    public Token getTokenId() {
+        return tokenId;
     }
 
-    public void setMimeType(String mimeType) {
-        this.mimeType = mimeType;
-    }
-
-    @XmlTransient
-    public Set<Profile> getProfileSet() {
-        return profileSet;
-    }
-
-    public void setProfileSet(Set<Profile> profileSet) {
-        this.profileSet = profileSet;
+    public void setTokenId(Token tokenId) {
+        this.tokenId = tokenId;
     }
 
     @Override
@@ -138,10 +120,10 @@ public class UploadedContent implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UploadedContent)) {
+        if (!(object instanceof TokenExtraClaim)) {
             return false;
         }
-        UploadedContent other = (UploadedContent) object;
+        TokenExtraClaim other = (TokenExtraClaim) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -150,7 +132,7 @@ public class UploadedContent implements Serializable {
 
     @Override
     public String toString() {
-        return "com.pazdev.authserver.model.UploadedContent[ id=" + id + " ]";
+        return "com.pazdev.authserver.model.TokenExtraClaim[ id=" + id + " ]";
     }
-
+    
 }

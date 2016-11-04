@@ -16,8 +16,6 @@
 package com.pazdev.authserver.model;
 
 import java.io.Serializable;
-import java.util.Locale;
-import java.util.Optional;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,7 +27,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -38,15 +35,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Jonathan Paz <jonathan@pazdev.com>
  */
 @Entity
-@Table(name = "client_name", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"client_id", "client_lang"})})
+@Table(name = "client_response_type", catalog = "authserver", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "ClientName.findAll", query = "SELECT c FROM ClientName c")
-    , @NamedQuery(name = "ClientName.findById", query = "SELECT c FROM ClientName c WHERE c.id = :id")
-    , @NamedQuery(name = "ClientName.findByClientName", query = "SELECT c FROM ClientName c WHERE c.clientName = :clientName")
-    , @NamedQuery(name = "ClientName.findByClientLang", query = "SELECT c FROM ClientName c WHERE c.clientLang = :clientLang")})
-public class ClientName implements Serializable, MultiLanguageClaim<String> {
+    @NamedQuery(name = "ClientResponseType.findAll", query = "SELECT c FROM ClientResponseType c")
+    , @NamedQuery(name = "ClientResponseType.findById", query = "SELECT c FROM ClientResponseType c WHERE c.id = :id")
+    , @NamedQuery(name = "ClientResponseType.findByResponseType", query = "SELECT c FROM ClientResponseType c WHERE c.responseType = :responseType")})
+public class ClientResponseType implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -56,24 +51,22 @@ public class ClientName implements Serializable, MultiLanguageClaim<String> {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "client_name", nullable = false)
-    private String clientName;
-    @Column(name = "client_lang")
-    private String clientLang;
+    @Column(name = "response_type", nullable = false)
+    private String responseType;
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     @ManyToOne
     private Client clientId;
 
-    public ClientName() {
+    public ClientResponseType() {
     }
 
-    public ClientName(Integer id) {
+    public ClientResponseType(Integer id) {
         this.id = id;
     }
 
-    public ClientName(Integer id, String clientName) {
+    public ClientResponseType(Integer id, String responseType) {
         this.id = id;
-        this.clientName = clientName;
+        this.responseType = responseType;
     }
 
     public Integer getId() {
@@ -84,20 +77,12 @@ public class ClientName implements Serializable, MultiLanguageClaim<String> {
         this.id = id;
     }
 
-    public String getClientName() {
-        return clientName;
+    public String getResponseType() {
+        return responseType;
     }
 
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public String getClientLang() {
-        return clientLang;
-    }
-
-    public void setClientLang(String clientLang) {
-        this.clientLang = clientLang;
+    public void setResponseType(String responseType) {
+        this.responseType = responseType;
     }
 
     public Client getClientId() {
@@ -118,10 +103,10 @@ public class ClientName implements Serializable, MultiLanguageClaim<String> {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ClientName)) {
+        if (!(object instanceof ClientResponseType)) {
             return false;
         }
-        ClientName other = (ClientName) object;
+        ClientResponseType other = (ClientResponseType) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -130,21 +115,7 @@ public class ClientName implements Serializable, MultiLanguageClaim<String> {
 
     @Override
     public String toString() {
-        return "com.pazdev.authserver.ClientName[ id=" + id + " ]";
+        return "com.pazdev.authserver.model.ClientResponseType[ id=" + id + " ]";
     }
-
-    @Override
-    public String getValue() {
-        return clientName;
-    }
-
-    @Override
-    public Optional<Locale> getLanguageTag() {
-        Optional<Locale> retval = Optional.empty();
-        if (clientLang != null) {
-            retval = Optional.of(Locale.forLanguageTag(clientLang));
-        }
-        return retval;
-    }
-   
+    
 }
