@@ -18,6 +18,7 @@ package com.pazdev.authserver.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.pazdev.authserver.guice.annotation.Password;
+import com.pazdev.authserver.services.ResourceService;
 import com.pazdev.authserver.services.UserInfoService;
 import javax.crypto.SecretKeyFactory;
 
@@ -33,6 +34,7 @@ public class AuthServerModule extends AbstractModule {
         install(new AuthServerServletModule());
 
         bind(UserInfoService.class);
+        bind(ResourceService.class);
         bind(SecretKeyFactory.class).annotatedWith(Password.class).toProvider(PasswordKeyProvider.class);
     }
     

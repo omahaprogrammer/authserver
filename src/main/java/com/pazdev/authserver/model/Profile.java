@@ -149,16 +149,6 @@ public class Profile implements Serializable {
     @OneToMany(mappedBy = "accountId")
     private Set<ProfileAttribute> profileAttributeSet;
     @OneToMany(mappedBy = "profileId")
-    private Set<ProfileFamilyName> profileFamilyNameSet;
-    @OneToMany(mappedBy = "profileId")
-    private Set<ProfileName> profileNameSet;
-    @OneToMany(mappedBy = "profileId")
-    private Set<ProfileMiddleName> profileMiddleNameSet;
-    @OneToMany(mappedBy = "profileId")
-    private Set<ProfileGivenName> profileGivenNameSet;
-    @OneToMany(mappedBy = "profileId")
-    private Set<ProfileNickname> profileNicknameSet;
-    @OneToMany(mappedBy = "profileId")
     private Set<ProfileAddress> profileAddressSet;
 
     public Profile() {
@@ -396,52 +386,6 @@ public class Profile implements Serializable {
     public String toString() {
         return "com.pazdev.authserver.Profile[ id=" + id + " ]";
     }
-
-    @XmlTransient
-    public Set<ProfileFamilyName> getProfileFamilyNameSet() {
-        return profileFamilyNameSet;
-    }
-
-    public void setProfileFamilyNameSet(Set<ProfileFamilyName> profileFamilyNameSet) {
-        this.profileFamilyNameSet = profileFamilyNameSet;
-    }
-
-    @XmlTransient
-    public Set<ProfileName> getProfileNameSet() {
-        return profileNameSet;
-    }
-
-    public void setProfileNameSet(Set<ProfileName> profileNameSet) {
-        this.profileNameSet = profileNameSet;
-    }
-
-    @XmlTransient
-    public Set<ProfileMiddleName> getProfileMiddleNameSet() {
-        return profileMiddleNameSet;
-    }
-
-    public void setProfileMiddleNameSet(Set<ProfileMiddleName> profileMiddleNameSet) {
-        this.profileMiddleNameSet = profileMiddleNameSet;
-    }
-
-    @XmlTransient
-    public Set<ProfileGivenName> getProfileGivenNameSet() {
-        return profileGivenNameSet;
-    }
-
-    public void setProfileGivenNameSet(Set<ProfileGivenName> profileGivenNameSet) {
-        this.profileGivenNameSet = profileGivenNameSet;
-    }
-
-    @XmlTransient
-    public Set<ProfileNickname> getProfileNicknameSet() {
-        return profileNicknameSet;
-    }
-
-    public void setProfileNicknameSet(Set<ProfileNickname> profileNicknameSet) {
-        this.profileNicknameSet = profileNicknameSet;
-    }
-
 
     @XmlTransient
     public Set<ProfileAddress> getProfileAddressSet() {

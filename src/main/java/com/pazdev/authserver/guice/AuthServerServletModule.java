@@ -17,6 +17,7 @@ package com.pazdev.authserver.guice;
 
 import com.google.inject.persist.PersistFilter;
 import com.google.inject.servlet.ServletModule;
+import com.pazdev.authserver.resources.UploadedResourceServlet;
 
 /**
  *
@@ -27,6 +28,7 @@ public class AuthServerServletModule extends ServletModule {
     @Override
     protected void configureServlets() {
         filter("/*").through(PersistFilter.class);
+        serve("/resource/*").with(UploadedResourceServlet.class);
     }
    
 }

@@ -15,15 +15,12 @@
  */
 package com.pazdev.authserver.services;
 
-import com.nimbusds.langtag.LangTag;
-import com.nimbusds.langtag.LangTagException;
-import com.nimbusds.oauth2.sdk.id.Subject;
-import com.nimbusds.openid.connect.sdk.claims.Address;
-import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import com.pazdev.authserver.guice.annotation.Password;
 import com.pazdev.authserver.model.MultiLanguageClaim;
 import com.pazdev.authserver.model.Profile;
 import com.pazdev.authserver.model.ProfileAddress;
+import com.pazdev.oidc.id.Address;
+import com.pazdev.oidc.id.UserInfo;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -66,16 +63,16 @@ public class UserInfoService {
     private Optional<UserInfo> convertUserInfo(Optional<Profile> profile) {
         Optional<UserInfo> retval = Optional.empty();
         String foundsub = profile.map(Profile::getSub).orElse("not found");
-        UserInfo userInfo = new UserInfo(new Subject(foundsub));
-        
-        updateClaim(userInfo::setFamilyName, profile.map(Profile::getProfileFamilyNameSet).orElse(Collections.emptySet()));
-        updateClaim(userInfo::setGivenName, profile.map(Profile::getProfileGivenNameSet).orElse(Collections.emptySet()));
-        updateClaim(userInfo::setMiddleName, profile.map(Profile::getProfileMiddleNameSet).orElse(Collections.emptySet()));
-        updateClaim(userInfo::setNickname, profile.map(Profile::getProfileNicknameSet).orElse(Collections.emptySet()));
-        updateClaim(userInfo::setName, profile.map(Profile::getProfileNameSet).orElse(Collections.emptySet()));
+        UserInfo userInfo = new UserInfo();
+        userInfo.setSubject(foundsub);
+        userInfo.setFamilyName(profile.map(Profile::getFamilyName).orElse(null));
+        userInfo.setGivenName(profile.map(Profile::getGivenName).orElse(null));
+        userInfo.setMiddleName(profile.map(Profile::getMiddleName).orElse(null));
+        userInfo.setNickname(profile.map(Profile::getNickname).orElse(null));
+        userInfo.setName(profile.map(Profile::getProfileName).orElse(null));
 
         Set<ProfileAddress> addresses = profile.map(Profile::getProfileAddressSet).orElse(Collections.emptySet());
-        addresses.parallelStream().forEach((a) -> {
+        addresses.forEach((a) -> {
             Address claim = new Address();
             claim.setCountry(a.getCountry());
             claim.setFormatted(a.getFormatted());
@@ -83,23 +80,12 @@ public class UserInfoService {
             claim.setPostalCode(a.getPostalCode());
             claim.setRegion(a.getRegion());
             claim.setStreetAddress(a.getStreetAddress());
-            try {
-                userInfo.setAddress(claim, LangTag.parse(a.getAddressLang()));
-            } catch (LangTagException e) {
-                throw new RuntimeException(e);
-            }
         });
         
         if (profile.isPresent()) {
             retval = Optional.of(userInfo);
         }
         return retval;
-    }
-
-    private <T extends MultiLanguageClaim<V>, V> void updateClaim(BiConsumer<V, LangTag> claimSetter, Set<T> claimValues) {
-        claimValues.parallelStream().forEach((it) -> {
-            claimSetter.accept(it.getValue(), it.getLanguageTag().orElse(null));
-        });
     }
 
     private Optional<Profile> getProfile(String sub) {

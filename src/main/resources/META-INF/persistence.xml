@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="com.pazdev_authserver_war_1.0-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
-    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
     <class>com.pazdev.authserver.model.ClientRedirectUri</class>
     <class>com.pazdev.authserver.model.ProfileAttribute</class>
     <class>com.pazdev.authserver.model.Client</class>
@@ -19,6 +19,14 @@
     <class>com.pazdev.authserver.model.ProfileNickname</class>
     <class>com.pazdev.authserver.model.ProfileAddress</class>
     <class>com.pazdev.authserver.model.UploadedContent</class>
+    <class>com.pazdev.authserver.model.IdToken</class>
+    <class>com.pazdev.authserver.model.OAuth2Token</class>
+    <class>com.pazdev.authserver.model.ClientResponseType</class>
+    <class>com.pazdev.authserver.model.TokenExtraClaim</class>
+    <class>com.pazdev.authserver.model.Token</class>
+    <class>com.pazdev.authserver.model.IdTokenAmr</class>
+    <class>com.pazdev.authserver.model.ClientDefaultAcrValue</class>
+    <class>com.pazdev.authserver.model.ClientGrantType</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/authserver"/>
