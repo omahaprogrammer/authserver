@@ -50,12 +50,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>oauth2</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>oidc</artifactId>
+            <artifactId>jwt</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

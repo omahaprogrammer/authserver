@@ -27,11 +27,11 @@ import javax.persistence.TypedQuery;
  *
  * @author Jonathan Paz <jonathan@pazdev.com>
  */
-public class ResourceService {
+public class UploadedResourceService {
     private final EntityManager em;
 
     @Inject
-    public ResourceService(EntityManager em) {
+    public UploadedResourceService(EntityManager em) {
         this.em = em;
     }
 

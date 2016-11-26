@@ -16,7 +16,7 @@
 package com.pazdev.authserver.resources;
 
 import com.pazdev.authserver.model.UploadedContent;
-import com.pazdev.authserver.services.ResourceService;
+import com.pazdev.authserver.services.UploadedResourceService;
 import java.io.IOException;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -35,9 +35,9 @@ import javax.servlet.http.HttpServletResponse;
 public class UploadedResourceServlet extends HttpServlet {
     private static final Pattern UUID_PATTERN = Pattern.compile("[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}");
     
-    private final ResourceService rs;
+    private final UploadedResourceService rs;
 
-    public UploadedResourceServlet(ResourceService rs) {
+    public UploadedResourceServlet(UploadedResourceService rs) {
         this.rs = rs;
     }
     /**
