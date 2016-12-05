@@ -74,6 +74,7 @@ create table public.profile_attribute (
 drop table if exists public.client cascade;
 create table public.client (
     id serial primary key,
+    profile_id integer references public.profile (id),
     client_type text not null,
     client_id text not null unique,
     client_secret text not null unique,

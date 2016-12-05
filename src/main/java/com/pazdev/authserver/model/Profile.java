@@ -150,6 +150,8 @@ public class Profile implements Serializable {
     private Set<ProfileAttribute> profileAttributeSet;
     @OneToMany(mappedBy = "profileId")
     private Set<ProfileAddress> profileAddressSet;
+    @OneToMany(mappedBy = "profileId")
+    private Set<Client> clientSet;
 
     public Profile() {
     }
@@ -376,10 +378,7 @@ public class Profile implements Serializable {
             return false;
         }
         Profile other = (Profile) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
@@ -394,6 +393,15 @@ public class Profile implements Serializable {
 
     public void setProfileAddressSet(Set<ProfileAddress> profileAddressSet) {
         this.profileAddressSet = profileAddressSet;
+    }
+
+    @XmlTransient
+    public Set<Client> getClientSet() {
+        return clientSet;
+    }
+
+    public void setClientSet(Set<Client> clientSet) {
+        this.clientSet = clientSet;
     }
 
     public String getProfileName() {
