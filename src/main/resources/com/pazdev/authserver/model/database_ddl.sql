@@ -142,44 +142,15 @@ create table public.client_default_acr_value (
 drop table if exists public.token cascade;
 create table public.token (
     id serial primary key,
-    issuer text,
-    subject text,
-    audience text,
-    expiration_time timestamp,
-    not_before timestamp,
+    token_value text,
     issued_at timestamp not null,
-    jwt_id text unique not null
+    not_before timestamp,
+    expiration_time timestamp
 );
-drop table if exists public.token_extra_claim cascade;
-create table public.token_extra_claim (
+drop table if exists public.session_info cascade;
+create table public.session_info (
     id serial primary key,
-    token_id integer not null references public.token(id) on delete cascade,
-    claim_name text not null,
-    claim_value text not null,
-    unique(token_id,claim_name)
-);
-drop table if exists public.o_auth2_token cascade;
-create table public.o_auth2_token (
-    id integer references public.token (id),
-    scopes text,
-    client_id text,
-    username text,
-    token_type text
-);
-drop table if exists public.id_token cascade;
-create table public.id_token (
-    id integer references public.token (id),
-    auth_time timestamp,
-    nonce text,
-    acr text,
-    azp text,
-    atHash text,
-    cHash text
-);
-drop table if exists public.id_token_amr cascade;
-create table public.id_token_amr (
-    id serial primary key,
-    token_id integer references public.token (id) on delete cascade,
-    amr text not null,
-    unique (token_id, amr)
+    profile_id integer references public.profile (id) on delete cascade,
+    cookie_value text unique not null,
+    expiration_time timestamp not null
 );

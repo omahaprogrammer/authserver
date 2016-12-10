@@ -17,68 +17,50 @@ package com.pazdev.authserver.model;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Set;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Jonathan Paz <jonathan@pazdev.com>
  */
 @Entity
-@Table(name = "token", catalog = "authserver", schema = "public")
+@Table(name = "token")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Token.findAll", query = "SELECT t FROM Token t")
     , @NamedQuery(name = "Token.findById", query = "SELECT t FROM Token t WHERE t.id = :id")
-    , @NamedQuery(name = "Token.findByIssuer", query = "SELECT t FROM Token t WHERE t.issuer = :issuer")
-    , @NamedQuery(name = "Token.findBySubject", query = "SELECT t FROM Token t WHERE t.subject = :subject")
-    , @NamedQuery(name = "Token.findByAudience", query = "SELECT t FROM Token t WHERE t.audience = :audience")
-    , @NamedQuery(name = "Token.findByExpirationTime", query = "SELECT t FROM Token t WHERE t.expirationTime = :expirationTime")
-    , @NamedQuery(name = "Token.findByNotBefore", query = "SELECT t FROM Token t WHERE t.notBefore = :notBefore")
+    , @NamedQuery(name = "Token.findByTokenValue", query = "SELECT t FROM Token t WHERE t.tokenValue = :tokenValue")
     , @NamedQuery(name = "Token.findByIssuedAt", query = "SELECT t FROM Token t WHERE t.issuedAt = :issuedAt")
-    , @NamedQuery(name = "Token.findByJwtId", query = "SELECT t FROM Token t WHERE t.jwtId = :jwtId")})
-@Inheritance(strategy = InheritanceType.JOINED)
+    , @NamedQuery(name = "Token.findByNotBefore", query = "SELECT t FROM Token t WHERE t.notBefore = :notBefore")
+    , @NamedQuery(name = "Token.findByExpirationTime", query = "SELECT t FROM Token t WHERE t.expirationTime = :expirationTime")})
 public class Token implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
-    @Column(name = "issuer")
-    private String issuer;
-    @Column(name = "subject")
-    private String subject;
-    @Column(name = "audience")
-    private String audience;
-    @Column(name = "expiration_time")
-    private Instant expirationTime;
+    @Column(name = "token_value")
+    private String tokenValue;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "issued_at")
+    private Instant issuedAt;
     @Column(name = "not_before")
     private Instant notBefore;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "issued_at", nullable = false)
-    private Instant issuedAt;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "jwt_id", nullable = false)
-    private String jwtId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tokenId")
-    private Set<TokenExtraClaim> tokenExtraClaimSet;
+    @Column(name = "expiration_time")
+    private Instant expirationTime;
 
     public Token() {
     }
@@ -87,10 +69,9 @@ public class Token implements Serializable {
         this.id = id;
     }
 
-    public Token(Integer id, Instant issuedAt, String jwtId) {
+    public Token(Integer id, Instant issuedAt) {
         this.id = id;
         this.issuedAt = issuedAt;
-        this.jwtId = jwtId;
     }
 
     public Integer getId() {
@@ -101,45 +82,36 @@ public class Token implements Serializable {
         this.id = id;
     }
 
-    public String getIssuer() {
-        return issuer;
+    public String getTokenValue() {
+        return tokenValue;
     }
 
-    public void setIssuer(String issuer) {
-        this.issuer = issuer;
+    public void setTokenValue(String tokenValue) {
+        this.tokenValue = tokenValue;
     }
 
-    public String getSubject() {
-        return subject;
+    public Instant getIssuedAt() {
+        return issuedAt;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public void setIssuedAt(Instant issuedAt) {
+        this.issuedAt = issuedAt;
     }
 
-    public String getAudience() {
-        return audience;
+    public Instant getNotBefore() {
+        return notBefore;
     }
 
-    public void setAudience(String audience) {
-        this.audience = audience;
+    public void setNotBefore(Instant notBefore) {
+        this.notBefore = notBefore;
     }
 
-    public String getJwtId() {
-        return jwtId;
+    public Instant getExpirationTime() {
+        return expirationTime;
     }
 
-    public void setJwtId(String jwtId) {
-        this.jwtId = jwtId;
-    }
-
-    @XmlTransient
-    public Set<TokenExtraClaim> getTokenExtraClaimSet() {
-        return tokenExtraClaimSet;
-    }
-
-    public void setTokenExtraClaimSet(Set<TokenExtraClaim> tokenExtraClaimSet) {
-        this.tokenExtraClaimSet = tokenExtraClaimSet;
+    public void setExpirationTime(Instant expirationTime) {
+        this.expirationTime = expirationTime;
     }
 
     @Override

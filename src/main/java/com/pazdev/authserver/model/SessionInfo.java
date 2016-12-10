@@ -16,6 +16,7 @@
 package com.pazdev.authserver.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,6 +28,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -36,39 +39,46 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Jonathan Paz <jonathan@pazdev.com>
  */
 @Entity
-@Table(name = "id_token_amr", catalog = "authserver", schema = "public")
+@Table(name = "session_info")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "IdTokenAmr.findAll", query = "SELECT i FROM IdTokenAmr i")
-    , @NamedQuery(name = "IdTokenAmr.findById", query = "SELECT i FROM IdTokenAmr i WHERE i.id = :id")
-    , @NamedQuery(name = "IdTokenAmr.findByAmr", query = "SELECT i FROM IdTokenAmr i WHERE i.amr = :amr")})
-public class IdTokenAmr implements Serializable {
+    @NamedQuery(name = "SessionInfo.findAll", query = "SELECT s FROM SessionInfo s")
+    , @NamedQuery(name = "SessionInfo.findById", query = "SELECT s FROM SessionInfo s WHERE s.id = :id")
+    , @NamedQuery(name = "SessionInfo.findByCookieValue", query = "SELECT s FROM SessionInfo s WHERE s.cookieValue = :cookieValue")
+    , @NamedQuery(name = "SessionInfo.findByExpirationTime", query = "SELECT s FROM SessionInfo s WHERE s.expirationTime = :expirationTime")})
+public class SessionInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
-    @Column(name = "amr", nullable = false, length = 2147483647)
-    private String amr;
-    @JoinColumn(name = "token_id", referencedColumnName = "id")
+    @Column(name = "cookie_value")
+    private String cookieValue;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "expiration_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date expirationTime;
+    @JoinColumn(name = "profile_id", referencedColumnName = "id")
     @ManyToOne
-    private Token tokenId;
+    private Profile profileId;
 
-    public IdTokenAmr() {
+    public SessionInfo() {
     }
 
-    public IdTokenAmr(Integer id) {
+    public SessionInfo(Integer id) {
         this.id = id;
     }
 
-    public IdTokenAmr(Integer id, String amr) {
+    public SessionInfo(Integer id, String cookieValue, Date expirationTime) {
         this.id = id;
-        this.amr = amr;
+        this.cookieValue = cookieValue;
+        this.expirationTime = expirationTime;
     }
 
     public Integer getId() {
@@ -79,20 +89,28 @@ public class IdTokenAmr implements Serializable {
         this.id = id;
     }
 
-    public String getAmr() {
-        return amr;
+    public String getCookieValue() {
+        return cookieValue;
     }
 
-    public void setAmr(String amr) {
-        this.amr = amr;
+    public void setCookieValue(String cookieValue) {
+        this.cookieValue = cookieValue;
     }
 
-    public Token getTokenId() {
-        return tokenId;
+    public Date getExpirationTime() {
+        return expirationTime;
     }
 
-    public void setTokenId(Token tokenId) {
-        this.tokenId = tokenId;
+    public void setExpirationTime(Date expirationTime) {
+        this.expirationTime = expirationTime;
+    }
+
+    public Profile getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(Profile profileId) {
+        this.profileId = profileId;
     }
 
     @Override
@@ -105,10 +123,10 @@ public class IdTokenAmr implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof IdTokenAmr)) {
+        if (!(object instanceof SessionInfo)) {
             return false;
         }
-        IdTokenAmr other = (IdTokenAmr) object;
+        SessionInfo other = (SessionInfo) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -117,7 +135,7 @@ public class IdTokenAmr implements Serializable {
 
     @Override
     public String toString() {
-        return "com.pazdev.authserver.model.IdTokenAmr[ id=" + id + " ]";
+        return "com.pazdev.authserver.model.SessionInfo[ id=" + id + " ]";
     }
     
 }

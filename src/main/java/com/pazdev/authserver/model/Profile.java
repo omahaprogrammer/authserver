@@ -152,6 +152,8 @@ public class Profile implements Serializable {
     private Set<ProfileAddress> profileAddressSet;
     @OneToMany(mappedBy = "profileId")
     private Set<Client> clientSet;
+    @OneToMany(mappedBy = "profileId")
+    private Set<SessionInfo> sessionInfoSet;
 
     public Profile() {
     }
@@ -442,6 +444,15 @@ public class Profile implements Serializable {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    @XmlTransient
+    public Set<SessionInfo> getSessionInfoSet() {
+        return sessionInfoSet;
+    }
+
+    public void setSessionInfoSet(Set<SessionInfo> sessionInfoSet) {
+        this.sessionInfoSet = sessionInfoSet;
     }
 
 }
